@@ -16,17 +16,21 @@ import java.sql.SQLException;
  */
 public class measurement_DTO {
 
-    public static String createDevice(
+    /**
+     * Creates a measurement row in the measurement table
+     * @param id_measurement
+     * @param id_sensor_ref
+     * @param data
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public static String createMeasurement(
             String id_measurement,
             String id_sensor_ref, 
-            String data, 
-            String lastRecorded_date
+            String data
                                      ) throws SQLException, ClassNotFoundException //get question from database
     {
-        /**
-         * lastActive could be a date object, which a mySql database also can
-         * hold
-         */
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -38,14 +42,13 @@ public class measurement_DTO {
                             Conn.PASS
                     );
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO device (ID_MEASUREMENT,ID_SENSOR_REF,DATA,LAST_RECORDED_DATE) VALUES (?,?,?,?)";
+            String query = "INSERT INTO device (ID_MEASUREMENT,ID_SENSOR_REF,DATA,LAST_RECORDED_DATE) VALUES (?,?,?)";
 
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, id_measurement);
             preparedStmt.setString(2, id_sensor_ref);
             preparedStmt.setString(3, data);
-            preparedStmt.setString(4, lastRecorded_date);
 
             // execute the preparedstatement
             preparedStmt.execute();

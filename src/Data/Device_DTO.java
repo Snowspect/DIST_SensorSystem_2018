@@ -15,13 +15,23 @@ import java.sql.SQLException;
  */
 public class Device_DTO
 {
+    /**
+     * Creates a row in the table device with the given parameters.
+     * device_id will increment itself and that id will be returned and given to user.
+     * @param device_name
+     * @param owner
+     * @param ip
+     * @param configured
+     * @param configured_date --will be pulled from current date
+     * @param lastActive --will be pulled from current date
+     * @param created_date --will be pulled from current date
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
         public static String createDevice(
-                String device_id, 
                 String device_name, 
-                String owner, 
-                String ip, 
-                boolean configured,
-                String configured_date, 
+                String owner,  
                 String lastActive, 
                 String created_date
                                          ) throws SQLException, ClassNotFoundException //get question from database
@@ -41,19 +51,15 @@ public class Device_DTO
                             Conn.PASS
                     );
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO device (ID_DEVICE,NAME,OWNER,IP,CONFIGURED,CONFIGURED_DATE,LASTACTIVE_DATE,CREATEDATE) VALUES (?,?,?,?,?,?,?,?)";
+            String query = "INSERT INTO device (NAME,OWNER,LASTACTIVE_DATE,CREATEDATE) VALUES (?,?,?,?)";
             
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             PreparedStatement dw = conn.prepareStatement(query);
-            preparedStmt.setString(1, device_id);
-            preparedStmt.setString(2, device_name);
-            preparedStmt.setString(3, owner);
-            preparedStmt.setString(4, ip);
-            preparedStmt.setBoolean(5, configured);
-            preparedStmt.setString(6, configured_date);
-            preparedStmt.setString(7, lastActive);
-            preparedStmt.setString(8, created_date);
+            preparedStmt.setString(1, device_name);
+            preparedStmt.setString(2, owner);
+            preparedStmt.setString(3, lastActive);
+            preparedStmt.setString(4, created_date);
 
             // execute the preparedstatement
             preparedStmt.execute();
@@ -61,7 +67,7 @@ public class Device_DTO
             //close connection
             conn.close();
 
-            //never displaed
+            //never displayed
             return "device_created";
         } catch (SQLException e)
         {

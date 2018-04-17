@@ -54,3 +54,14 @@ public class DB_DTO_buildstone {
         }
     }
 }
+
+
+/** TODO
+ * CREATE METHODS THAT PULL OUT DEVICE ID.
+ * CREATE METHODS THAT SELECT DEVICE ID. (possibly same as above)?
+ * 
+ * CREATE METHODS SIMILAR FOR SENSOR ID
+ * CREATE METHODS TO PULL DATA IN GENERAL FOR NEEDED ITEMS.
+ * 
+ * CREATE METHOD THAT CREATES A DATE OBJECT to be transfered to different SQL tables.
+ */

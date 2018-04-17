@@ -15,10 +15,21 @@ import java.sql.SQLException;
  * @author tooth
  */
 public class Sensor_DTO {
-
-    public static String createSensor(
-            String id_sensor, 
-            String name,
+    
+    /**
+     * Creates a sensor in the sensor table within the DB. Also the sensor id is automatically created by the DB.
+     * @param name
+     * @param id_device
+     * @param sensorType
+     * @param pin
+     * @param lastActive
+     * @param updateTime_minutes
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public static String createSensor( 
+            String name,    
             String id_device, 
             String sensorType, 
             String pin, 
@@ -41,17 +52,16 @@ public class Sensor_DTO {
                             Conn.PASS
                     );
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO device (ID_SENSOR,NAME,ID_DEVICE_REF,SENSORTYPE,PIN,LASTACTIVE_DATE,UPDATETIME_MIN) VALUES (?,?,?,?,?,?,?)";
+            String query = "INSERT INTO device (NAME,ID_DEVICE_REF,SENSORTYPE,PIN,LASTACTIVE_DATE,UPDATETIME_MIN) VALUES (?,?,?,?,?,?)";
 
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString(1, id_sensor);
-            preparedStmt.setString(2, name);
-            preparedStmt.setString(3, id_device);
-            preparedStmt.setString(4, sensorType);
-            preparedStmt.setString(5, pin);
-            preparedStmt.setString(6, lastActive);
-            preparedStmt.setString(7, updateTime_minutes);
+            preparedStmt.setString(1, name);
+            preparedStmt.setString(2, id_device);
+            preparedStmt.setString(3, sensorType);
+            preparedStmt.setString(4, pin);
+            preparedStmt.setString(5, lastActive);
+            preparedStmt.setString(6, updateTime_minutes);
 
             // execute the preparedstatement
             preparedStmt.execute();
