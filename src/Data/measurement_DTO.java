@@ -42,7 +42,7 @@ public class measurement_DTO {
                             Conn.PASS
                     );
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO device (ID_MEASUREMENT,ID_SENSOR_REF,DATA,LAST_RECORDED_DATE) VALUES (?,?,?)";
+            String query = "INSERT INTO device (ID_MEASUREMENT,ID_SENSOR_REF,DATA) VALUES (?,?,?)";
 
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
