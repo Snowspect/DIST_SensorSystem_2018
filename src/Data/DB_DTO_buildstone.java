@@ -9,29 +9,17 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 /**
  *
  * @author tooth
  */
-public class Device_DTO
-{
-        public static String createDevice(
-                String device_id, 
-                String device_name, 
-                String owner, 
-                String ip, 
-                boolean configured,
-                String configured_date, 
-                String lastActive, 
-                String created_date
-                                         ) throws SQLException, ClassNotFoundException //get question from database
-        {
-        /**
-         * lastActive/created_date could be a date object, which a mySql database also can hold
-         */
+public class DB_DTO_buildstone {
+
+    public static String createX(String y, String x) throws SQLException, ClassNotFoundException //get question from database
+    {
         //try to connect to jdbc and create user
-        try
-        {
+        try {
             // create a mysql database connection
             Class.forName(Conn.DRIVER); //Conn is our connection file
             Connection conn = DriverManager.getConnection //Connection is a built in SQL class
@@ -41,35 +29,25 @@ public class Device_DTO
                             Conn.PASS
                     );
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO device (ID_DEVICE,NAME,OWNER,IP,CONFIGURED,CONFIGURED_DATE,LASTACTIVE_DATE,CREATEDATE) VALUES (?,?,?,?,?,?,?,?)";
-            
+            String query = "INSERT INTO x (y,x....) VALUES (?,?..)";
+
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            PreparedStatement dw = conn.prepareStatement(query);
-            preparedStmt.setString(1, device_id);
-            preparedStmt.setString(2, device_name);
-            preparedStmt.setString(3, owner);
-            preparedStmt.setString(4, ip);
-            preparedStmt.setBoolean(5, configured);
-            preparedStmt.setString(6, configured_date);
-            preparedStmt.setString(7, lastActive);
-            preparedStmt.setString(8, created_date);
-
+            preparedStmt.setString(1, y);
+            preparedStmt.setString(2, x);
             // execute the preparedstatement
             preparedStmt.execute();
-            
+
             //close connection
             conn.close();
 
             //never displaed
-            return "device_created";
-        } catch (SQLException e)
-        {
+            return "x_completed";
+        } catch (SQLException e) {
             System.err.println("Got an sql exception!");
             System.err.println(e.getMessage());
             return e.getMessage();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             System.err.println("Got an exception!");
             System.err.println(e.getMessage());
             return e.getMessage();
