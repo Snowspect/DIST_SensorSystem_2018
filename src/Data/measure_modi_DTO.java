@@ -9,6 +9,6 @@ package Data;
  *
  * @author tooth
  */
-public class Sensor_modi {
+public class measure_modi_DTO {
     
 }
