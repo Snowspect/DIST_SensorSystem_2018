@@ -62,7 +62,7 @@ public class measure_modi_DTO {
     
     public static String Pull_all_measurements(String sensor_id_ref) throws SQLException, ClassNotFoundException
     {
-        
+        //TODO implement
         
         return "";
     }
