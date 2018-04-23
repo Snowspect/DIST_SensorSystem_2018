@@ -8,6 +8,7 @@ package Data;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -272,5 +273,35 @@ public class Sensor_modi_DTO {
             System.err.println(e.getMessage());
             return e.getMessage();
         }
+    }
+
+     /**
+     * pulls owner string
+     */
+    public static String Pull_related_sensorIDs(int device_ID_ref) throws SQLException, ClassNotFoundException
+    {
+        String tmp = "";
+        try {
+            Class.forName(Conn.DRIVER);
+            Connection conn = DriverManager.getConnection(
+                    Conn.DATABASE,
+                    Conn.USER,
+                    Conn.PASS
+            );
+
+            String query = "SELECT * FROM sensor WHERE ID_DEVICE_REF = ?";
+
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setInt(1, device_ID_ref);
+
+            ResultSet rs = preparedStmt.executeQuery();
+
+            while (rs.next()) {
+                tmp = rs.getString("ID_SENSOR");
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("database error");
+        }
+        return tmp;
     }
 }

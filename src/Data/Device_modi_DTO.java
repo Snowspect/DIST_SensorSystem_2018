@@ -8,6 +8,7 @@ package Data;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -19,10 +20,11 @@ public class Device_modi_DTO {
 
     /**
      * Changes owner
+     *
      * @param owner
      * @return
      * @throws SQLException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public static String Change_owner(String owner) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
@@ -62,10 +64,11 @@ public class Device_modi_DTO {
 
     /**
      * changes lastActive Date
+     *
      * @param lastActive_Date
      * @return
      * @throws SQLException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public static String Change_lastActive(String lastActive_Date) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
@@ -105,10 +108,11 @@ public class Device_modi_DTO {
 
     /**
      * Changes device name
+     *
      * @param device_name
      * @return
      * @throws SQLException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public static String Change_Name(String device_name) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
@@ -144,5 +148,93 @@ public class Device_modi_DTO {
             System.err.println(e.getMessage());
             return e.getMessage();
         }
+    }
+
+    /**
+     * pulls deviceID
+     */
+    public static int Pull_deviceID(String device_Name) throws SQLException, ClassNotFoundException {
+        int tmp = 0;
+        try {
+            Class.forName(Conn.DRIVER);
+            Connection conn = DriverManager.getConnection(
+                    Conn.DATABASE,
+                    Conn.USER,
+                    Conn.PASS
+            );
+
+            String query = "SELECT ID_DEVICE FROM device WHERE NAME = ?";
+
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setString(1, device_Name);
+
+            ResultSet rs = preparedStmt.executeQuery();
+
+            while (rs.next()) {
+                tmp = rs.getInt("ID_DEVICE");
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("database error");
+        }
+        return tmp;
+    }
+    /**
+     * pulls device Name
+     */
+    public static String Pull_deviceName(int device_ID) throws SQLException, ClassNotFoundException
+    {
+        String tmp = "";
+        try {
+            Class.forName(Conn.DRIVER);
+            Connection conn = DriverManager.getConnection(
+                    Conn.DATABASE,
+                    Conn.USER,
+                    Conn.PASS
+            );
+
+            String query = "SELECT NAME FROM device WHERE ID_DEVICE = ?";
+
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setInt(1, device_ID);
+
+            ResultSet rs = preparedStmt.executeQuery();
+
+            while (rs.next()) {
+                tmp = rs.getString("NAME");
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("database error");
+        }
+        return tmp;
+    }
+    
+    /**
+     * pulls owner string
+     */
+    public static String Pull_owner(int device_ID) throws SQLException, ClassNotFoundException
+    {
+        String tmp = "";
+        try {
+            Class.forName(Conn.DRIVER);
+            Connection conn = DriverManager.getConnection(
+                    Conn.DATABASE,
+                    Conn.USER,
+                    Conn.PASS
+            );
+
+            String query = "SELECT ID_DEVICE FROM device WHERE NAME = ?";
+
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setInt(1, device_ID);
+
+            ResultSet rs = preparedStmt.executeQuery();
+
+            while (rs.next()) {
+                tmp = rs.getString("OWNER");
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("database error");
+        }
+        return tmp;
     }
 }

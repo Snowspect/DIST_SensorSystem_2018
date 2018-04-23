@@ -8,7 +8,11 @@ package Data;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author tooth
@@ -81,4 +85,86 @@ public class Device_DTO
             return e.getMessage();
         }
     }
+     /**
+     * pulls entire device information based on device ID
+     */
+    public static List<String> Pull_device(int device_ID) throws SQLException, ClassNotFoundException
+    {
+        ArrayList<String> tmp = new ArrayList<String>();
+        try {
+            Class.forName(Conn.DRIVER);
+            Connection conn = DriverManager.getConnection(
+                    Conn.DATABASE,
+                    Conn.USER,
+                    Conn.PASS
+            );
+
+            String query = "SELECT * FROM device WHERE ID_DEVICE = ?";
+
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setInt(1, device_ID);
+
+            ResultSet rs = preparedStmt.executeQuery();
+            
+            while (rs.next()) {
+                tmp.add(rs.getInt("ID_DEVICE") + "");
+                tmp.add(rs.getString("NAME"));
+                tmp.add(rs.getString("OWNER"));
+                tmp.add(rs.getString("LASTACTIVE_DATE"));
+                tmp.add(rs.getString("CREATED_DATE"));
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("database error");
+        }
+        return tmp;
+    }
+    
+    public static List<Device_DAO> Pull_all_devices(String device_owner) throws SQLException, ClassNotFoundException
+    {
+        ArrayList<Device_DAO> tmp = new ArrayList<>();
+        try {
+            Class.forName(Conn.DRIVER);
+            Connection conn = DriverManager.getConnection(
+                    Conn.DATABASE,
+                    Conn.USER,
+                    Conn.PASS
+            );
+
+            String query = "SELECT * FROM device WHERE OWNER = ?";
+
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setString(1, device_owner);
+
+            ResultSet rs = preparedStmt.executeQuery();
+            
+            /**
+             * if the current implementation doesn't work, switch to:
+             * ResultSetMetaData metadata = rs.getMetaData();
+             * int columnCount = metadata.getColumnCont();
+             * 
+             * while(rs.next())
+             * {
+             * String row = "";
+             * for (int i = 1; i <= columnCount; i++)
+             * {
+             * row += rs.getString(i) + ", ";
+             * }
+             * tmp.add(row);
+             * }
+             */
+            
+            while (rs.next()) {
+                Device_DAO tx = new Device_DAO();
+                tx.id_Device = rs.getInt("ID_DEVICE");
+                tx.created_Date = rs.getString("CREATED_DATE");
+                tx.device_Name = rs.getString("NAME");
+                tx.device_Owner = rs.getString("OWNER");
+                tx.last_Active_Date = rs.getString("LASTACTIVE_DATE");
+                tmp.add(tx);
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("database error");
+        }
+        return tmp;
+    }   
 }
