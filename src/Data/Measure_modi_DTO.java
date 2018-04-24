@@ -26,7 +26,7 @@ public class Measure_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String Change_sensor_ref(String sensor_id_ref) throws SQLException, ClassNotFoundException
+    public static String change_sensor_ref(String sensor_id_ref) throws SQLException, ClassNotFoundException
     {
         //try to connect to jdbc and create user
         try {
@@ -63,7 +63,7 @@ public class Measure_modi_DTO {
         }
     }
     
-    public static List<Measurement_DAO> Pull_all_measurements(int sensor_id_ref) throws SQLException, ClassNotFoundException
+    public static List<Measurement_DAO> pull_all_measurements(int sensor_id_ref) throws SQLException, ClassNotFoundException
     {
         ArrayList<Measurement_DAO> tmp = new ArrayList<>();
         try {
@@ -95,7 +95,7 @@ public class Measure_modi_DTO {
         return tmp;
     }
     
-    public static List<Measurement_DAO> Pull_measurements_within_dates(int timestampOne, int timestampTwo, int sensor_id_ref) throws SQLException, ClassNotFoundException
+    public static List<Measurement_DAO> pull_measurements_within_dates(int timestampOne, int timestampTwo, int sensor_id_ref) throws SQLException, ClassNotFoundException
     {
         ArrayList<Measurement_DAO> tmp = new ArrayList<>();
          try {
@@ -161,7 +161,7 @@ public class Measure_modi_DTO {
         return tmp;
     }
         
-    public static List<String> Pull_data_within_dates(int timestampOne, int timestampTwo, int sensor_id_ref) throws SQLException, ClassNotFoundException
+    public static List<String> pull_data_within_dates(int timestampOne, int timestampTwo, int sensor_id_ref) throws SQLException, ClassNotFoundException
     {
         ArrayList<String> tmp = new ArrayList<>();
         try {

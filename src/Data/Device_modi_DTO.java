@@ -26,7 +26,7 @@ public class Device_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public static String Change_owner(String owner) throws SQLException, ClassNotFoundException {
+    public static String change_owner(String owner) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -70,7 +70,7 @@ public class Device_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public static String Change_lastActive(int lastActive_Date) throws SQLException, ClassNotFoundException {
+    public static String change_lastActive(int lastActive_Date) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -114,7 +114,7 @@ public class Device_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public static String Change_Name(String device_name) throws SQLException, ClassNotFoundException {
+    public static String change_Name(String device_name) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -153,7 +153,7 @@ public class Device_modi_DTO {
     /**
      * pulls deviceID
      */
-    public static int Pull_deviceID(String device_Name) throws SQLException, ClassNotFoundException {
+    public static int pull_deviceID(String device_Name) throws SQLException, ClassNotFoundException {
         int tmp = 0;
         try {
             Class.forName(Conn.DRIVER);
@@ -181,7 +181,7 @@ public class Device_modi_DTO {
     /**
      * pulls device Name
      */
-    public static String Pull_deviceName(int device_ID) throws SQLException, ClassNotFoundException
+    public static String pull_deviceName(int device_ID) throws SQLException, ClassNotFoundException
     {
         String tmp = "";
         try {
@@ -211,7 +211,7 @@ public class Device_modi_DTO {
     /**
      * pulls owner string
      */
-    public static String Pull_owner(int device_ID) throws SQLException, ClassNotFoundException
+    public static String pull_owner(int device_ID) throws SQLException, ClassNotFoundException
     {
         String tmp = "";
         try {

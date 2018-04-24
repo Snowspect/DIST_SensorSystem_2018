@@ -72,7 +72,7 @@ public class Measurement_DTO {
         }
     }
     
-    public static List<String> Pull_all_data(int sensor_id_ref) throws SQLException, ClassNotFoundException
+    public static List<String> pull_all_data(int sensor_id_ref) throws SQLException, ClassNotFoundException
     {
         ArrayList<String> tmp = new ArrayList<>();
         try {

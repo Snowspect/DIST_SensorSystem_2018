@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +87,7 @@ public class Device_DTO
      /**
      * pulls entire device information based on device ID
      */
-    public static List<String> Pull_device(int device_ID) throws SQLException, ClassNotFoundException
+    public static List<String> pull_device(int device_ID) throws SQLException, ClassNotFoundException
     {
         ArrayList<String> tmp = new ArrayList<String>();
         try {
@@ -119,7 +118,7 @@ public class Device_DTO
         return tmp;
     }
     
-    public static List<Device_DAO> Pull_all_devices(String device_owner) throws SQLException, ClassNotFoundException
+    public static List<Device_DAO> pull_all_devices(String device_owner) throws SQLException, ClassNotFoundException
     {
         ArrayList<Device_DAO> tmp = new ArrayList<>();
         try {
@@ -168,7 +167,7 @@ public class Device_DTO
         return tmp;
     }   
     
-    public static String Delete_device(int device_id) throws SQLException, ClassNotFoundException
+    public static String delete_device(int device_ID) throws SQLException, ClassNotFoundException
     {
         
         //TODO FIX SO THAT IT DELETES A DEVICE
