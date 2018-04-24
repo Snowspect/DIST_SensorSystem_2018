@@ -29,9 +29,9 @@ public class Measurement_DTO {
      * @throws ClassNotFoundException 
      */
     public static String createMeasurement(
-            String id_measurement,
             String id_sensor_ref, 
-            String data
+            String data,
+            int created_timestamp
                                      ) throws SQLException, ClassNotFoundException //get question from database
     {
         //try to connect to jdbc and create user
@@ -49,9 +49,9 @@ public class Measurement_DTO {
 
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString(1, id_measurement);
-            preparedStmt.setString(2, id_sensor_ref);
-            preparedStmt.setString(3, data);
+            preparedStmt.setString(1, id_sensor_ref);
+            preparedStmt.setString(2, data);
+            preparedStmt.setString(3, created_timestamp);
 
             // execute the preparedstatement
             preparedStmt.execute();
