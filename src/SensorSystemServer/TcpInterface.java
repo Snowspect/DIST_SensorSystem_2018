@@ -15,7 +15,7 @@ import javax.jws.WebService;
 @WebService 
 public interface TcpInterface {
     
-    @WebMethod public void oploadData();
-    @WebMethod public void opdateDevice();
+    @WebMethod public void oploadData( int sensorID, String data );
+    @WebMethod public void sensorConf( int sensor_Type, int pin_Num, int sensor_ID);
     
 }

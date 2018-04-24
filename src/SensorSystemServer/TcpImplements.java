@@ -5,7 +5,13 @@
  */
 package SensorSystemServer;
 
+import static Data.Measurement_DTO.createMeasurement;
+import Data.Sensor_modi_DTO;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,14 +19,36 @@ import java.util.ArrayList;
  */
 public class TcpImplements implements TcpInterface{
     
-    public void oploadData(int sensorID, String data){
+    public void oploadData(int sensor_ID, String data){
+        Date d = new Date();
         
+        try {
+            createMeasurement(sensor_ID, data ,d.getTime());
+        } catch (SQLException ex) {
+            Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    public void oploadDataStream(int sensorID, ArrayList<String> data){
+    public void oploadDataStream(int sensor_ID, ArrayList<String> data){
         
     }
     
-    public void opdateDevice(){
+    public void sensorConf(int sensor_Type, int pin_Num, int sensor_ID){
         
+        try {
+            String t = "";
+            String p = pin_Num+"";
+        
+            if(sensor_Type == 0) t = "ANALOG";
+            if(sensor_Type == 1) t = "DIGITAL";
+        
+            Sensor_modi_DTO.change_sensortype(t, sensor_ID);
+            Sensor_modi_DTO.change_pin(p, sensor_ID);
+        } catch (SQLException ex) {
+            Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

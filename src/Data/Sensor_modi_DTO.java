@@ -23,7 +23,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String Change_device_ref(String device_id_ref) throws SQLException, ClassNotFoundException //get question from database
+    public static String change_device_ref(String device_id_ref) throws SQLException, ClassNotFoundException //get question from database
     {
         //try to connect to jdbc and create user
         try {
@@ -67,7 +67,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String Change_sensortype(String sensortype, int sensor_id_ref) throws SQLException, ClassNotFoundException {
+    public static String change_sensortype(String sensortype, int sensor_id_ref) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -111,7 +111,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String Change_pin(String pin, int sensor_id_ref) throws SQLException, ClassNotFoundException {
+    public static String change_pin(String pin, int sensor_id_ref) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -155,7 +155,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String Change_lastActive(String lastActive_Date) throws SQLException, ClassNotFoundException {
+    public static String change_lastActive(String lastActive_Date) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -198,7 +198,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String Change_updatetime(String updatetime_Minutes) throws SQLException, ClassNotFoundException {
+    public static String change_updatetime(String updatetime_Minutes) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -241,7 +241,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String Change_Name(String sensor_name) throws SQLException, ClassNotFoundException {
+    public static String change_Name(String sensor_name) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -280,7 +280,7 @@ public class Sensor_modi_DTO {
      /**
      * pulls owner string
      */
-    public static String Pull_related_sensorIDs(int device_ID_ref) throws SQLException, ClassNotFoundException
+    public static String pull_related_sensorIDs(int device_ID_ref) throws SQLException, ClassNotFoundException
     {
         String tmp = "";
         try {
