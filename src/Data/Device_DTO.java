@@ -167,4 +167,31 @@ public class Device_DTO
         }
         return tmp;
     }   
+    
+    public static String Delete_device(int device_id) throws SQLException, ClassNotFoundException
+    {
+        
+        //TODO FIX SO THAT IT DELETES A DEVICE
+        try {
+            Class.forName(Conn.DRIVER);
+            Connection conn = DriverManager.getConnection(
+                    Conn.DATABASE,
+                    Conn.USER,
+                    Conn.PASS
+            );
+
+            String query = " WHERE ID_DEVICE = ?";
+
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setInt(1, device_ID);
+
+            ResultSet rs = preparedStmt.executeQuery();
+            
+            while (rs.next()) {
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("database error");
+        }
+        return "device deleted";
+    }
 }
