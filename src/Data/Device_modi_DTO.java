@@ -70,7 +70,7 @@ public class Device_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public static String Change_lastActive(String lastActive_Date) throws SQLException, ClassNotFoundException {
+    public static String Change_lastActive(int lastActive_Date) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -86,7 +86,7 @@ public class Device_modi_DTO {
 
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString(1, lastActive_Date);
+            preparedStmt.setInt(1, lastActive_Date);
             // execute the preparedstatement
             preparedStmt.execute();
 

@@ -67,7 +67,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String Change_sensortype(String sensortype) throws SQLException, ClassNotFoundException {
+    public static String Change_sensortype(String sensortype, int sensor_id_ref) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -79,11 +79,12 @@ public class Sensor_modi_DTO {
                             Conn.PASS
                     );
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO sensor (SENSORTYPE) VALUES (?)";
+            String query = "INSERT INTO sensor (SENSORTYPE) VALUES (?) WHERE ID_SENSOR = ?";
 
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, sensortype);
+            preparedStmt.setInt(2, sensor_id_ref);
             // execute the preparedstatement
             preparedStmt.execute();
 
@@ -110,7 +111,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String Change_pin(String pin) throws SQLException, ClassNotFoundException {
+    public static String Change_pin(String pin, int sensor_id_ref) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -122,11 +123,12 @@ public class Sensor_modi_DTO {
                             Conn.PASS
                     );
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO sensor (PIN) VALUES (?)";
+            String query = "INSERT INTO sensor (PIN) VALUES (?) WHERE ID_SENSOR = ?";
 
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, pin);
+            preparedStmt.setInt(2, sensor_id_ref);
             // execute the preparedstatement
             preparedStmt.execute();
 

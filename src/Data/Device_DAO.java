@@ -13,6 +13,6 @@ public class Device_DAO {
     int id_Device = 0;
     String device_Name = "john doe";
     String device_Owner = "john doe 2";
-    String last_Active_Date = "john date";
-    String created_Date = "john created";
+    int last_Active_Date = 0;
+    int created_Date = 0;
 }
