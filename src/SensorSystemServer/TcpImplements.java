@@ -43,8 +43,8 @@ public class TcpImplements implements TcpInterface{
             if(sensor_Type == 0) t = "ANALOG";
             if(sensor_Type == 1) t = "DIGITAL";
         
-            Sensor_modi_DTO.change_sensortype(t, sensor_ID);
-            Sensor_modi_DTO.change_pin(p, sensor_ID);
+            Sensor_modi_DTO.sensor_Change_Sensortype(t, sensor_ID);
+            Sensor_modi_DTO.sensor_Change_Pin(p, sensor_ID);
         } catch (SQLException ex) {
             Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {

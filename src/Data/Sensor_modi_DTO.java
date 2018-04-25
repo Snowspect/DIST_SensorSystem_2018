@@ -16,14 +16,17 @@ import java.sql.SQLException;
  * @author tooth
  */
 public class Sensor_modi_DTO {
+
     /**
-     * Changes the device reference id, which has to exists within the device table
+     * Changes the device reference id, which has to exists within the device
+     * table
+     *
      * @param device_id_ref
      * @return
      * @throws SQLException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
-    public static String change_device_ref(String device_id_ref) throws SQLException, ClassNotFoundException //get question from database
+    public static String sensor_Change_Device_Ref(String device_id_ref) throws SQLException, ClassNotFoundException //get question from database
     {
         //try to connect to jdbc and create user
         try {
@@ -62,12 +65,13 @@ public class Sensor_modi_DTO {
 
     /**
      * Changes the date it was configured
+     *
      * @param sensortype
      * @return
      * @throws SQLException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
-    public static String change_sensortype(String sensortype, int sensor_id_ref) throws SQLException, ClassNotFoundException {
+    public static String sensor_Change_Sensortype(String sensortype, int sensor_id_ref) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -106,12 +110,13 @@ public class Sensor_modi_DTO {
 
     /**
      * Changes the pin it is registered to
+     *
      * @param pin
      * @return
      * @throws SQLException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
-    public static String change_pin(String pin, int sensor_id_ref) throws SQLException, ClassNotFoundException {
+    public static String sensor_Change_Pin(String pin, int sensor_id_ref) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -149,13 +154,15 @@ public class Sensor_modi_DTO {
     }
 
     /**
-     * changes lastActive Date of the sensor - takes a date in the format: as argument.
+     * changes lastActive Date of the sensor - takes a date in the format: as
+     * argument.
+     *
      * @param lastActive_Date
      * @return
      * @throws SQLException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
-    public static String change_lastActive(String lastActive_Date) throws SQLException, ClassNotFoundException {
+    public static String sensor_Change_LastActive(String lastActive_Date) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -193,12 +200,13 @@ public class Sensor_modi_DTO {
 
     /**
      * Changes the IP associated with the sensor
+     *
      * @param updatetime_Minutes
      * @return
      * @throws SQLException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
-    public static String change_updatetime(String updatetime_Minutes) throws SQLException, ClassNotFoundException {
+    public static String sensor_Change_Updatetime(String updatetime_Minutes) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -236,12 +244,13 @@ public class Sensor_modi_DTO {
 
     /**
      * Changes the name of the sensor
+     *
      * @param sensor_name
      * @return
      * @throws SQLException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
-    public static String change_Name(String sensor_name) throws SQLException, ClassNotFoundException {
+    public static String sensor_Change_Name(String sensor_name) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -277,11 +286,10 @@ public class Sensor_modi_DTO {
         }
     }
 
-     /**
+    /**
      * pulls owner string
      */
-    public static String pull_related_sensorIDs(int device_ID_ref) throws SQLException, ClassNotFoundException
-    {
+    public static String sensor_Pull_Related_SensorIDs(int device_ID_ref) throws SQLException, ClassNotFoundException {
         String tmp = "";
         try {
             Class.forName(Conn.DRIVER);

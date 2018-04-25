@@ -32,7 +32,7 @@ public class Device_DTO
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-        public static String createDevice(
+        public static String device_CreateDevice(
                 String device_name, 
                 String owner,  
                 String lastActive,
@@ -87,7 +87,7 @@ public class Device_DTO
      /**
      * pulls entire device information based on device ID
      */
-    public static List<String> pull_device(int device_ID) throws SQLException, ClassNotFoundException
+    public static List<String> device_Pull_Device(int device_ID) throws SQLException, ClassNotFoundException
     {
         ArrayList<String> tmp = new ArrayList<String>();
         try {
@@ -118,7 +118,7 @@ public class Device_DTO
         return tmp;
     }
     
-    public static List<Device_DAO> pull_all_devices(String device_owner) throws SQLException, ClassNotFoundException
+    public static List<Device_DAO> device_Pull_All_Devices(String device_owner) throws SQLException, ClassNotFoundException
     {
         ArrayList<Device_DAO> tmp = new ArrayList<>();
         try {
@@ -167,7 +167,7 @@ public class Device_DTO
         return tmp;
     }   
     
-    public static String delete_device(int device_ID) throws SQLException, ClassNotFoundException
+    public static String device_Delete_Device(int device_ID) throws SQLException, ClassNotFoundException
     {
         
         //TODO FIX SO THAT IT DELETES A DEVICE

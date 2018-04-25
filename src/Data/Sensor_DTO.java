@@ -31,7 +31,7 @@ public class Sensor_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String createSensor( 
+    public static String sensor_CreateSensor( 
             String name,    
             String id_device, 
             String sensorType, 
@@ -87,7 +87,7 @@ public class Sensor_DTO {
          /**
      * pulls entire sensor information based on sensor ID
      */
-    public static List<String> pull_sensor(int sensor_ID) throws SQLException, ClassNotFoundException
+    public static List<String> sensor_Pull_Sensor(int sensor_ID) throws SQLException, ClassNotFoundException
     {
         ArrayList<String> tmp = new ArrayList<String>();
         try {
@@ -128,7 +128,7 @@ public class Sensor_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static List<Sensor_DAO> pull_all_sensors(String device_ID_Ref) throws SQLException, ClassNotFoundException
+    public static List<Sensor_DAO> sensor_Pull_All_Sensors(String device_ID_Ref) throws SQLException, ClassNotFoundException
     {
         ArrayList<Sensor_DAO> tmp = new ArrayList<>();
         try {
