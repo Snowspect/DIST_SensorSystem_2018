@@ -10,9 +10,19 @@ package Data;
  * @author tooth
  */
 public class Device_DAO {
-    int id_Device = 0;
-    String device_Name = "john doe";
-    String device_Owner = "john doe 2";
-    int last_Active_Date = 0;
-    int created_Date = 0;
+    public int id_Device = 0;
+    public String device_Name = "john doe";
+    public String device_Owner = "john doe 2";
+    public String last_Active_Date = "";
+    public String created_Date = "";
+    
+    public String toString(){
+        String ret = "ID:" + this.id_Device +
+                    "_NAME:" + this.device_Name +
+                    "_OWNER:" + this.device_Owner +
+                    "_LAD:" + this.last_Active_Date +
+                    "_CD:" + this.created_Date +
+                    "!";
+        return ret;
+    }
 }

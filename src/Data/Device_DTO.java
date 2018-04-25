@@ -155,10 +155,10 @@ public class Device_DTO
             while (rs.next()) {
                 Device_DAO tx = new Device_DAO();
                 tx.id_Device = rs.getInt("ID_DEVICE");
-                tx.created_Date = rs.getInt("CREATED_DATE");
+                tx.created_Date = rs.getString("CREATED_DATE");
                 tx.device_Name = rs.getString("NAME");
                 tx.device_Owner = rs.getString("OWNER");
-                tx.last_Active_Date = rs.getInt("LASTACTIVE_DATE");
+                tx.last_Active_Date = rs.getString("LASTACTIVE_DATE");
                 tmp.add(tx);
             }
         } catch (ClassNotFoundException | SQLException e) {

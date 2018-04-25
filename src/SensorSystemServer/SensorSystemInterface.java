@@ -5,10 +5,8 @@
  */
 package SensorSystemServer;
 
-import UserInterface.Device;
-import UserInterface.Sensor;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
@@ -22,18 +20,30 @@ public interface SensorSystemInterface {
     
     @WebMethod public int login(String user, String password);
     
-    @WebMethod public String set_Sensor_Info(int sensor_id, int device_id_ref, int type, int pin, String name);
-    @WebMethod public String set_Device_Info(int device_id, String owner, String name);
+    @WebMethod public String set_Sensor_Info(int sensor_id, 
+                                            int device_id_ref, 
+                                            int type, 
+                                            int pin, 
+                                            String name);
     
-    @WebMethod public Sensor get_Sensor_Info(int sensor_id);
-    @WebMethod public Device get_Device_Info(int device_id);
+    @WebMethod public String set_Device_Info(int device_id, 
+                                            String owner, 
+                                            String name);
     
-    @WebMethod public void delete_Sensor(int sensor_id);
-    @WebMethod public void delete_Device(int device_id);
     
-    @WebMethod public ArrayList<Device> get_Devices(int owner);
-    @WebMethod public void delete_Devices(int owner);
+    @WebMethod public String create_Sensor(String name, String id_device, String sensorType, String pin);
+    @WebMethod public String create_Device(String name, String owner);
     
-    @WebMethod public ArrayList<String> get_All_Sensor_Data(int sensor_id);
-    @WebMethod public ArrayList<String> get_All_Sensor_Data_Within_Dates(int sensor_id, Date older, Date newer); 
+    @WebMethod public List<String> get_Sensor_Info(int sensor_id);
+    @WebMethod public List<String> get_Device_Info(int device_id);
+    
+    @WebMethod public List<String> get_Sensors_ID(int device_ID_Ref);
+    @WebMethod public List<String> get_Devices_ID(String owner);
+    
+    @WebMethod public List<String> get_Sensor_Data(int sensor_id);
+    @WebMethod public List<String> get_Device_Data(String device_ID_Ref);
+    @WebMethod public List<String> get_Sensor_Data_Within_Dates(
+                                            int sensor_id, 
+                                            Date older, 
+                                            Date newer); 
 }

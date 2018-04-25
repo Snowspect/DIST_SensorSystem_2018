@@ -5,9 +5,19 @@
  */
 package SensorSystemServer;
 
+import Data.Device_DAO;
+import static Data.Device_DTO.*;
 import static Data.Device_modi_DTO.*;
-import UserInterface.*;
+
+import Data.Measurement_DAO;
+import static Data.Measure_modi_DTO.*;
+import static Data.Measurement_DTO.*;
+
+import Data.Sensor_DAO;
+import static Data.Sensor_DTO.*;
 import static Data.Sensor_modi_DTO.*;
+
+import UserInterface.*;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -19,6 +29,7 @@ import javax.jws.WebService;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -48,12 +59,33 @@ public class SensorSystemImplements implements SensorSystemInterface
             return 0;
         }
     }
+    
+    public String create_Sensor(String name, String id_device, String sensorType, String pin){
+        String ret = "";
+        try {
+            Date dt = new Date();
+            ret = sensor_CreateSensor(name, id_device, sensorType, pin, dt.toString(), dt.toString());
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return ret;
+    }
+    
+    public String create_Device(String name, String owner){
+        String ret = "";
+        try {
+            Date dt = new Date();
+            ret = device_CreateDevice(name, owner, dt.toString(), dt.toString());
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ret;
+    }
     /*
     * Change Sensor info, pull sensor info and the change what need and use this to send it back to database
-    */
-    
-    public String set_Sensor_Info(int sensor_id, int device_id_ref, int type, int pin, String name)
-    {
+    */ 
+    public String set_Sensor_Info(int sensor_id, int device_id_ref, int type, int pin, String name){
         String status = "Something went wrong";
         try {
             //Change device its connected to
@@ -66,59 +98,124 @@ public class SensorSystemImplements implements SensorSystemInterface
             if (type == 0) tp = "ANALOG";
             else if (type == 1) tp = "DIGITAL";
             tmp = sensor_Change_Sensortype( tp, sensor_id);
-            status = status + "Sensor: " + tmp;
+            status = status + " Sensor: " + tmp;
             
             //Change pin
             String pn = pin+"";
             tmp = sensor_Change_Pin(pn, sensor_id);
-            status = status + "Pin: " + tmp;
+            status = status + " Pin: " + tmp;
             
             //Change name
             tmp = sensor_Change_Name(name);
-            status = status + "Name: " + tmp; 
+            status = status + " Name: " + tmp; 
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
         }
         return status;
     }
+    
     public String set_Device_Info(int device_id, String owner, String name){
         String status = "Something went wrong";
         try {
-            change_owner(owner);
-            sensor_Change_Name(name);
+            String tmp = device_Change_Owner(owner);
+            status = "Owner: " + tmp;
+            
+            tmp = device_Change_Name(name);
+            status = status +" Name: "+ tmp;
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return status;
+    }
+
+    public List<String> get_Sensor_Info(int sensor_id){
+        List<String> lt = new ArrayList<>();
+        try {
+            lt = sensor_Pull_Sensor(sensor_id);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return lt;
+    }
+    
+    public List<String> get_Device_Info(int device_id){
+        List<String> lt = new ArrayList<>();
+        try {
+            lt = device_Pull_Device(device_id);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return lt;
+    }
+
+    public List<String> get_Devices_ID(String owner){
+        List<String> ret = new ArrayList<>();
+        try {
+            List<Device_DAO> devices = new ArrayList<>();
+            devices = device_Pull_All_Devices(owner);
+            
+            for(Device_DAO dd : devices){
+                String dvc = dd.id_Device+"";
+                ret.add(dvc);
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return ret;
+    }
+    
+    public String get_Sensors_ID(int device_ID_Ref){
+        String ret = "";
+        try {
+            ret = sensor_Pull_Related_SensorIDs(device_ID_Ref);
         } catch (SQLException ex) {
             Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return ret;
     }
 
-    public Sensor get_Sensor_Info(int sensor_id){
-
+    public List<String> get_Sensor_Data(int sensor_id){
+        List<String> ret = new ArrayList<>();
+        try {
+            ret = pull_all_data(sensor_id);
+            
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ret;
     }
-    public Device get_Device_Info(int device_id){
-
+    
+    public List<String> get_Device_Data(String device_ID_Ref){
+        List<String> ret = new ArrayList<>();
+        try {
+            List<Sensor_DAO> sensor = new ArrayList<>();
+            
+            sensor = sensor_Pull_All_Sensors(device_ID_Ref);
+            
+            for(Sensor_DAO SD : sensor){
+                ret.add( SD.toString() );
+            }
+            
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ret;
     }
+    
+    public List<String> get_Sensor_Data_Within_Dates(int sensor_id, Date older, Date newer){
+        List<String> ret = new ArrayList<>();
+        try {
+          
+            ret = pull_data_within_dates(older.getTime(), newer.getTime(), sensor_id);
 
-    public void delete_Sensor(int sensor_id){
-
-    }
-    public void delete_Device(int device_id){
-
-    }
-
-    public ArrayList<Device> get_Devices(int owner){
-
-    }
-    public void delete_Devices(int owner){
-
-    }
-
-    public ArrayList<String> get_All_Sensor_Data(int sensor_id){
-
-    }
-    public ArrayList<String> get_All_Sensor_Data_Within_Dates(int sensor_id, Date older, Date newer){
-
+            
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ret;
     }
 
 }

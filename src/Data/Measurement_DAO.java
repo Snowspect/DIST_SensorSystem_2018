@@ -13,5 +13,5 @@ public class Measurement_DAO {
     int id_measurement = 0;
     int sensor_id_ref = 0;
     String data = "";
-    int Data_created_date = 0;
+    long Data_created_date = 0;
 }

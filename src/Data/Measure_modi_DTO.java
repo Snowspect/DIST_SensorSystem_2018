@@ -95,7 +95,7 @@ public class Measure_modi_DTO {
         return tmp;
     }
     
-    public static List<Measurement_DAO> pull_measurements_within_dates(int timestampOne, int timestampTwo, int sensor_id_ref) throws SQLException, ClassNotFoundException
+    public static List<Measurement_DAO> pull_measurements_within_dates(long timestampOne, long timestampTwo, int sensor_id_ref) throws SQLException, ClassNotFoundException
     {
         ArrayList<Measurement_DAO> tmp = new ArrayList<>();
          try {
@@ -109,8 +109,8 @@ public class Measure_modi_DTO {
             String query = "SELECT * FROM measurement WHERE DATA_DATE_CREATED >= ? AND DATA_DATE_CREATED <= ? AND ID_SENSOR_REF = ?";
 
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setInt(1, timestampOne);
-            preparedStmt.setInt(2, timestampTwo);
+            preparedStmt.setLong(1, timestampOne);
+            preparedStmt.setLong(2, timestampTwo);
             preparedStmt.setInt(3, sensor_id_ref);
 
             ResultSet rs = preparedStmt.executeQuery();
@@ -161,7 +161,7 @@ public class Measure_modi_DTO {
         return tmp;
     }
         
-    public static List<String> pull_data_within_dates(int timestampOne, int timestampTwo, int sensor_id_ref) throws SQLException, ClassNotFoundException
+    public static List<String> pull_data_within_dates(long timestampOne, long timestampTwo, int sensor_id_ref) throws SQLException, ClassNotFoundException
     {
         ArrayList<String> tmp = new ArrayList<>();
         try {
@@ -175,8 +175,8 @@ public class Measure_modi_DTO {
             String query = "SELECT DATA FROM measurement WHERE DATA_DATE_CREATED >= ? AND DATA_DATE_CREATED <= ? AND ID_SENSOR_REF = ?";
 
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setInt(1, timestampOne);
-            preparedStmt.setInt(2, timestampTwo);
+            preparedStmt.setLong(1, timestampOne);
+            preparedStmt.setLong(2, timestampTwo);
             preparedStmt.setInt(3, sensor_id_ref);
 
             ResultSet rs = preparedStmt.executeQuery();
