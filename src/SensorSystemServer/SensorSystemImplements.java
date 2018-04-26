@@ -9,11 +9,9 @@ import Data.Device_DAO;
 import static Data.Device_DTO.*;
 import static Data.Device_modi_DTO.*;
 
-import Data.Measurement_DAO;
 import static Data.Measure_modi_DTO.*;
 import static Data.Measurement_DTO.*;
 
-import Data.Sensor_DAO;
 import static Data.Sensor_DTO.*;
 import static Data.Sensor_modi_DTO.*;
 
@@ -36,10 +34,14 @@ import java.util.List;
  * @author Bruger
  */
 @WebService(endpointInterface = "SensorSystemServer.SensorSystemInterface")
-public class SensorSystemImplements implements SensorSystemInterface 
-{
-    HashMap<Integer, User> activeUsers;
-    
+public class SensorSystemImplements implements SensorSystemInterface {
+
+    private HashMap<Integer, User> activeUsers;
+
+    public SensorSystemImplements() {
+        activeUsers = new HashMap<>();
+    }
+
     public int login(String user, String password) {
         try {
             System.out.println("Login: " + user);
@@ -60,160 +62,192 @@ public class SensorSystemImplements implements SensorSystemInterface
         }
     }
     
-    public String create_Sensor(String name, String id_device, String sensorType, String pin){
+    public String create_Sensor(int user, 
+                                String name, 
+                                String id_device, 
+                                String sensorType, 
+                                String pin) 
+    {
         String ret = "";
-        try {
-            Date dt = new Date();
-            ret = sensor_CreateSensor(name, id_device, sensorType, pin, dt.toString(), dt.toString());
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+        if (activeUsers.containsKey(user)) {
+            try {
+                Date dt = new Date();
+                ret = sensor_CreateSensor(name, id_device, sensorType, pin, dt.toString(), dt.toString());
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        
         return ret;
     }
     
-    public String create_Device(String name, String owner){
+    public String create_Device(int user, String name) 
+    {
         String ret = "";
-        try {
-            Date dt = new Date();
-            ret = device_CreateDevice(name, owner, dt.toString(), dt.toString());
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+        if (activeUsers.containsKey(user)) {
+            try {
+                Date dt = new Date();
+                ret = device_CreateDevice(name, user + "", dt.toString(), dt.toString());
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return ret;
     }
+
+    public String set_Sensor_Info(int user, 
+                                int sensor_id, 
+                                int device_id_ref, 
+                                int type, 
+                                int pin, 
+                                String name) 
+    {
+        String status = "Something went wrong";
+        if (activeUsers.containsKey(user)) {
+            try {
+                //Change device its connected to
+                String dir = device_id_ref + "";
+                String tmp = sensor_Change_Device_Ref(dir);
+                status = "Owner: " + tmp;
+
+                //Change sensor type
+                String tp = "";
+                if (type == 0) {
+                    tp = "ANALOG";
+                } else if (type == 1) {
+                    tp = "DIGITAL";
+                }
+                tmp = sensor_Change_Sensortype(tp, sensor_id);
+                status = status + " Sensor: " + tmp;
+
+                //Change pin
+                String pn = pin + "";
+                tmp = sensor_Change_Pin(pn, sensor_id);
+                status = status + " Pin: " + tmp;
+
+                //Change name
+                tmp = sensor_Change_Name(name);
+                status = status + " Name: " + tmp;
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return status;
+    }
+
+    public String set_Device_Info(int user, 
+                                int device_id, 
+                                String owner,    
+                                String name) 
+    {
+        String status = "Something went wrong";
+        if (activeUsers.containsKey(user)) {
+            try {
+                String tmp = device_Change_Owner(owner);
+                status = "Owner: " + tmp;
+                tmp = device_Change_Name(name);
+                status = status + " Name: " + tmp;
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return status;
+    }
+
+
+    public List<String> get_Sensor_Info(int user, int sensor_id) 
+    {
+        List<String> lt = new ArrayList<>();
+        if (activeUsers.containsKey(user)) {
+            try {
+                lt = sensor_Pull_Sensor(sensor_id);
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return lt;
+    }
+
+    public List<String> get_Device_Info(int user, int device_id) 
+    {
+        List<String> lt = new ArrayList<>();
+        if(activeUsers.containsKey(user)) {
+            try {
+                lt = device_Pull_Device(device_id);
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return lt;
+    }
+    
+    public HashMap<Integer, String> get_ids(int user)
+    {
+        HashMap<Integer, String> ret = new HashMap<>();
+        if(activeUsers.containsKey(user)) {
+            try {
+                List<Integer> devices_id = get_Devices_ID(user);
+                
+                for(Integer i : devices_id)  
+                {
+                    String s = sensor_Pull_Related_SensorIDs(i);
+                    ret.put(i, s);
+                }
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+        return ret;
+    }
+
+
     /*
-    * Change Sensor info, pull sensor info and the change what need and use this to send it back to database
-    */ 
-    public String set_Sensor_Info(int sensor_id, int device_id_ref, int type, int pin, String name){
-        String status = "Something went wrong";
-        try {
-            //Change device its connected to
-            String dir = device_id_ref+"";
-            String tmp = sensor_Change_Device_Ref(dir);
-            status= "Owner: " + tmp;
-            
-            //Change sensor type
-            String tp = "";
-            if (type == 0) tp = "ANALOG";
-            else if (type == 1) tp = "DIGITAL";
-            tmp = sensor_Change_Sensortype( tp, sensor_id);
-            status = status + " Sensor: " + tmp;
-            
-            //Change pin
-            String pn = pin+"";
-            tmp = sensor_Change_Pin(pn, sensor_id);
-            status = status + " Pin: " + tmp;
-            
-            //Change name
-            tmp = sensor_Change_Name(name);
-            status = status + " Name: " + tmp; 
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return status;
-    }
-    
-    public String set_Device_Info(int device_id, String owner, String name){
-        String status = "Something went wrong";
-        try {
-            String tmp = device_Change_Owner(owner);
-            status = "Owner: " + tmp;
-            
-            tmp = device_Change_Name(name);
-            status = status +" Name: "+ tmp;
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return status;
+    * Get List of IDs of devices connected to user
+    */
+    private List<Integer> get_Devices_ID(int user) throws SQLException, ClassNotFoundException 
+    {
+        List<Integer> ret = new ArrayList<>();
+        List<Device_DAO> devices = device_Pull_All_Devices(user+"");
+        devices.stream().map((dd) -> dd.id_Device ).forEachOrdered((dvc) -> {
+            ret.add(dvc);
+        });
+        return ret;
     }
 
-    public List<String> get_Sensor_Info(int sensor_id){
-        List<String> lt = new ArrayList<>();
-        try {
-            lt = sensor_Pull_Sensor(sensor_id);
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return lt;
-    }
     
-    public List<String> get_Device_Info(int device_id){
-        List<String> lt = new ArrayList<>();
-        try {
-            lt = device_Pull_Device(device_id);
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return lt;
-    }
-
-    public List<String> get_Devices_ID(String owner){
+    /*
+    *   Get all data from a sensor
+    */
+    public List<String> get_Sensor_Data(int user, int sensor_id) 
+    {
         List<String> ret = new ArrayList<>();
-        try {
-            List<Device_DAO> devices = new ArrayList<>();
-            devices = device_Pull_All_Devices(owner);
-            
-            for(Device_DAO dd : devices){
-                String dvc = dd.id_Device+"";
-                ret.add(dvc);
+        if(activeUsers.containsKey(user)) {
+            try {
+                ret = pull_all_data(sensor_id);
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return ret;
-    }
-    
-    public String get_Sensors_ID(int device_ID_Ref){
-        String ret = "";
-        try {
-            ret = sensor_Pull_Related_SensorIDs(device_ID_Ref);
-        } catch (SQLException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
         }
         return ret;
     }
 
-    public List<String> get_Sensor_Data(int sensor_id){
+    /*
+    *   Get all data from sensor within Dates
+    */
+    public List<String> get_Sensor_Data_Within_Dates(int user, 
+                                                    int sensor_id, 
+                                                    Date older, 
+                                                    Date newer) 
+    {
         List<String> ret = new ArrayList<>();
-        try {
-            ret = pull_all_data(sensor_id);
-            
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return ret;
-    }
-    
-    public List<String> get_Device_Data(String device_ID_Ref){
-        List<String> ret = new ArrayList<>();
-        try {
-            List<Sensor_DAO> sensor = new ArrayList<>();
-            
-            sensor = sensor_Pull_All_Sensors(device_ID_Ref);
-            
-            for(Sensor_DAO SD : sensor){
-                ret.add( SD.toString() );
+        if(activeUsers.containsKey(user)) {
+            try {
+
+                ret = pull_data_within_dates(older.getTime(), newer.getTime(), sensor_id);
+
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return ret;
-    }
-    
-    public List<String> get_Sensor_Data_Within_Dates(int sensor_id, Date older, Date newer){
-        List<String> ret = new ArrayList<>();
-        try {
-          
-            ret = pull_data_within_dates(older.getTime(), newer.getTime(), sensor_id);
-
-            
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
         }
         return ret;
     }

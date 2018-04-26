@@ -6,6 +6,7 @@
 package SensorSystemServer;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -17,32 +18,90 @@ import javax.jws.WebService;
  * @author Bruger
  */
 public interface SensorSystemInterface {
-    
+    /*
+    *   User login
+    *   @param user     -- username
+    *   @param password -- password 
+    */
     @WebMethod public int login(String user, String password);
     
-    @WebMethod public String set_Sensor_Info(int sensor_id, 
+    /*
+    *   Create Sensor
+    *   @param user         -- user id
+    *   @param name         -- Sensor name
+    *   @param id_device    -- id of the device sensor is connected to
+    *   @param sensorType   -- Type, Either put ANALOG or DIGITAL
+    *   @param pin          -- pin number
+    */
+    @WebMethod public String create_Sensor(int user,
+                                            String name, 
+                                            String id_device, 
+                                            String sensorType, 
+                                            String pin);
+    
+    /*
+    *   Create Device
+    *   @param user -- user id
+    *   @param name -- Device name
+    */    
+    @WebMethod public String create_Device(int user, String name);
+    
+    /*
+    *   Change Sensor info, pull sensor info and the change what need and use 
+    *   this to send it back to database
+    *   @param user             -- user id
+    *   @param sensor_id        -- id of the Sensor
+    *   @param device_id_ref    -- Change which device sensor is connected to
+    *   @param type             -- Change type, put ANALOG or DIGITAL
+    *   @param pin              -- Change pin
+    *   @param name             -- Change name
+    */
+    @WebMethod public String set_Sensor_Info(int user,
+                                            int sensor_id, 
                                             int device_id_ref, 
                                             int type, 
                                             int pin, 
                                             String name);
     
-    @WebMethod public String set_Device_Info(int device_id, 
+    /*
+    *   Change Device info, pull sensor info and the change what need and use 
+    *   this to send it back to database
+    *   @param user             -- user id
+    *   @param device_id        -- id of the device
+    *   @param device_id_ref    -- Change which device sensor is connected to
+    *   @param type             -- Change type, put ANALOG or DIGITAL
+    *   @param pin              -- Change pin
+    *   @param name             -- Change name
+    */
+    @WebMethod public String set_Device_Info(int user,
+                                            int device_id, 
                                             String owner, 
                                             String name);
+   
+    /*
+    *   Get sensor info
+    *   @param user             -- user id
+    *   @param sensor_id        -- id of the sensor
+    */ 
+    @WebMethod public List<String> get_Sensor_Info(int user, int sensor_id);
     
+    /*
+    *   Get device info
+    *   @param user             -- user id
+    *   @param device_id        -- id of the device
+    */ 
+    @WebMethod public List<String> get_Device_Info(int user, int device_id);
     
-    @WebMethod public String create_Sensor(String name, String id_device, String sensorType, String pin);
-    @WebMethod public String create_Device(String name, String owner);
+    /*
+    *   Get all IDs owned by user
+    *   @param user --user id
+    */
+    @WebMethod public HashMap<Integer, String> get_ids(int user);
     
-    @WebMethod public List<String> get_Sensor_Info(int sensor_id);
-    @WebMethod public List<String> get_Device_Info(int device_id);
+    @WebMethod public List<String> get_Sensor_Data(int user, int sensor_id);
     
-    @WebMethod public List<String> get_Sensors_ID(int device_ID_Ref);
-    @WebMethod public List<String> get_Devices_ID(String owner);
-    
-    @WebMethod public List<String> get_Sensor_Data(int sensor_id);
-    @WebMethod public List<String> get_Device_Data(String device_ID_Ref);
     @WebMethod public List<String> get_Sensor_Data_Within_Dates(
+                                            int user,
                                             int sensor_id, 
                                             Date older, 
                                             Date newer); 
