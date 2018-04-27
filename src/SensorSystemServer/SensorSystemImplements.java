@@ -193,7 +193,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
         if(activeUsers.containsKey(user)) {
             try {
                 System.out.println("ASSWHOOP");
-                List<Integer> devices_id = get_Devices_ID(user);
+                List<Integer> devices_id = get_Devices_ID_p(user);
                 System.out.println("MYNIGGA");
                 for(Integer i : devices_id)  
                 {   
@@ -210,11 +210,34 @@ public class SensorSystemImplements implements SensorSystemInterface {
         return  related_sensor_id;
     }
 
+    public List<Integer> get_Devices_ID(int user)  
+    {
+        List<Integer> ret = new ArrayList<>();
+        if(activeUsers.containsKey(user)) {
+            String userString = user + "";
+            ret = device_Pull_all_device_ids(userString);
+        }
+        return ret;
+    }
+    
+    public List<Integer> get_Sensors_ID(int user, int device_id)  
+    {
+        List<Integer> ret = new ArrayList<>();
+        if(activeUsers.containsKey(user)) {
+            String userString = user + "";
+            try {
+                ret = sensor_Pull_Related_SensorIDs(device_id);
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return ret;
+    }
 
     /*
     * Get List of IDs of devices connected to user
     */
-    private List<Integer> get_Devices_ID(int user) throws SQLException, ClassNotFoundException 
+    private List<Integer> get_Devices_ID_p(int user) throws SQLException, ClassNotFoundException 
     {
         List<Integer> ret = new ArrayList<>();
         String userString = user + "";
