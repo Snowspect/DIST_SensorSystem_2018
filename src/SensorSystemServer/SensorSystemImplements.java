@@ -54,9 +54,6 @@ public class SensorSystemImplements implements SensorSystemInterface {
             
             User b = ba.hentBruger(user, password);
             
-            if(b.brugernavn == null){
-                
-            }
             String id_string = b.adgangskode + ":" + b.campusnetId + ":" + b.studeretning;
             int id_code = id_string.hashCode();
             activeUsers.put(id_code, b);
