@@ -244,7 +244,8 @@ public class Device_modi_DTO {
             Class.forName("org.mariadb.jdbc.Driver");
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
-            String query = "SELECT ID_SENSOR FROM sensor WHERE ID_DEVICE_REF = ?";
+            String query = "SELECT ID_DEVICE FROM device WHERE OWNER = ?";
+            //String query = "SELECT ID_SENSOR FROM sensor WHERE ID_DEVICE_REF = ?";
 
             System.out.println("AFTER QUERY");
             PreparedStatement preparedStmt = conn.prepareStatement(query);
@@ -255,7 +256,7 @@ public class Device_modi_DTO {
 
             System.out.println("JUST BEFORE RS");
             while (rs.next()) {
-                tmp.add(rs.getInt("ID_SENSOR"));
+                tmp.add(rs.getInt("ID_DEVICE"));
             }
             System.out.println("AFTER RS");
             for (Integer inte : tmp) {
