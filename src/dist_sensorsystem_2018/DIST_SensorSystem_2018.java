@@ -31,7 +31,7 @@ public class DIST_SensorSystem_2018 {
             System.out.println("hellooooo1");
                             Date dt = new Date();
                 Timestamp dx = new Timestamp(dt.getTime());
-            //device_CreateDevice(2,"3","42", dx, dx);
+            device_CreateDevice(2,"3","42", dx, dx);
             //sensor_CreateSensor("sensor1", 3, "DIGITAL", "36", dx, dx, "4");
             SensorSystemImplements d = new SensorSystemImplements();
             ArrayList<ArrayList<Integer>> _ids = d.get_ids(42);
