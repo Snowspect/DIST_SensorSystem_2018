@@ -6,6 +6,7 @@
 package dist_sensorsystem_2018;
 
 import static Data.Device_DTO.device_CreateDevice;
+import static Data.Sensor_DTO.sensor_CreateSensor;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -25,7 +26,8 @@ public class DIST_SensorSystem_2018 {
             System.out.println("hellooooo1");
                             Date dt = new Date();
                 Timestamp dx = new Timestamp(dt.getTime());
-            device_CreateDevice(2,"test1","Dan", dx, dx);
+            //device_CreateDevice(2,"test1","Dan", dx, dx);
+            sensor_CreateSensor("sensor1", 1, "DIGITAL", "36", dx, dx, "4");
         }
         catch(Exception e)
         {

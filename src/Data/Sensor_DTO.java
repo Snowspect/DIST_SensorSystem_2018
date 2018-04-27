@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +34,11 @@ public class Sensor_DTO {
      */
     public static String sensor_CreateSensor( 
             String name,    
-            String id_device, 
+            int id_device, 
             String sensorType, 
-            String pin, 
-            String lastActive,
+            String pin,
+            Timestamp created_date,
+            Timestamp lastActive,
             String updateTime_minutes
                                      ) throws SQLException, ClassNotFoundException //get question from database
     {
@@ -47,24 +49,36 @@ public class Sensor_DTO {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
+            //Class.forName(Conn.DRIVER); //Conn is our connection file
+            //Connection conn = DriverManager.getConnection //Connection is a built in SQL class
+             /*       (
+                            Conn.DATABASE,
+                            Conn.USER,
+                            Conn.PASS
+                    ); */
+            // the mysql insert statement, adding a person into person table
+//            String query = "INSERT INTO device (NAME,ID_DEVICE_REF,SENSORTYPE,PIN,CREATED_DATE,LASTACTIVE_DATE,UPDATETIME_MIN) VALUES (?,?,?,?,?,?,?)";
+
+                        // create a mysql database connection
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            //Conn.DRIVER;
+            /*Connection conn = DriverManager.getConnection //Connection is a built in SQL class
                     (
                             Conn.DATABASE,
                             Conn.USER,
                             Conn.PASS
-                    );
-            // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO device (NAME,ID_DEVICE_REF,SENSORTYPE,PIN,LASTACTIVE_DATE,UPDATETIME_MIN) VALUES (?,?,?,?,?,?)";
-
+                    );*/
+            Connection conn = DriverManager.getConnection("jdbc:mariadb://159.89.134.40:3306/sensorsystem?user=Dist&password=*A4B6157319038724E3560894F7F932C8886EBFCF"); //
+              String query = "INSERT INTO device (NAME,ID_DEVICE_REF,SENSORTYPE,PIN,CREATED_DATE,LASTACTIVE_DATE,UPDATETIME_MIN) VALUES (?,?,?,?,?,?,?)";          
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, name);
             preparedStmt.setString(2, id_device);
             preparedStmt.setString(3, sensorType);
             preparedStmt.setString(4, pin);
-            preparedStmt.setString(5, lastActive);
-            preparedStmt.setString(6, updateTime_minutes);
+            preparedStmt.setTimestamp(5, created_date);
+            preparedStmt.setTimestamp(6, lastActive);
+            preparedStmt.setString(7, updateTime_minutes);
 
             // execute the preparedstatement
             preparedStmt.execute();

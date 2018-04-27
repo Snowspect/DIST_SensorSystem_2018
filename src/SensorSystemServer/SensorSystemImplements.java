@@ -192,17 +192,11 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 ArrayList<Integer> related_sensor_id = new ArrayList<>();
                 for(Integer i : devices_id)  
                 {
-<<<<<<< HEAD
-                    String s = i+"-"+sensor_Pull_Related_SensorIDs(i);
-                    ret.add(s);
-||||||| merged common ancestors
                     String s = sensor_Pull_Related_SensorIDs(i);
                     ret.put(i, s);
-=======
                     
                     related_sensor_id = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs(i);
                     //ret.put(i, s);
->>>>>>> 92223886bb443b4153feff55958bec66b0f0834f
                 }
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
