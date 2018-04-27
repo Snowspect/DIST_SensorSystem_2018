@@ -10,6 +10,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -278,11 +280,11 @@ public class Sensor_modi_DTO {
     }
 
      /**
-     * pulls owner string
+     * pulls all related sensors to a device
      */
-    public static String sensor_Pull_Related_SensorIDs(int device_ID_ref) throws SQLException, ClassNotFoundException
+    public static List<Integer> sensor_Pull_Related_SensorIDs(int device_ID_ref) throws SQLException, ClassNotFoundException
     {
-        String tmp = "";
+        ArrayList<Integer> tmp = new ArrayList<>();
         try {
             Class.forName(Conn.DRIVER);
             Connection conn = DriverManager.getConnection(
@@ -299,7 +301,7 @@ public class Sensor_modi_DTO {
             ResultSet rs = preparedStmt.executeQuery();
 
             while (rs.next()) {
-                tmp = rs.getString("ID_SENSOR");
+                tmp.add(rs.getInt("ID_SENSOR"));
             }
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("database error");

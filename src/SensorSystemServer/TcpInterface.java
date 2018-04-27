@@ -5,6 +5,8 @@
  */
 package SensorSystemServer;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
@@ -16,6 +18,8 @@ import javax.jws.WebService;
 public interface TcpInterface {
     
     @WebMethod public void oploadData( int sensorID, String data );
+    @WebMethod public List<String> get_Sensor_Info(int sensor_id);
     @WebMethod public void sensorConf( int sensor_Type, int pin_Num, int sensor_ID);
+    @WebMethod public ArrayList<Integer> get_Device_Sensors(int device_id);
     
 }

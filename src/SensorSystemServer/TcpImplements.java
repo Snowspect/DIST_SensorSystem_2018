@@ -6,10 +6,14 @@
 package SensorSystemServer;
 
 import static Data.Measurement_DTO.createMeasurement;
+import Data.Sensor_DAO;
+import static Data.Sensor_DTO.sensor_Pull_Sensor;
 import Data.Sensor_modi_DTO;
+import static Data.Sensor_modi_DTO.sensor_Pull_Related_SensorIDs;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.jws.WebService;
@@ -26,14 +30,30 @@ public class TcpImplements implements TcpInterface{
         
         try {
             createMeasurement(sensor_ID, data ,d.getTime());
-        } catch (SQLException ex) {
-            Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void oploadDataStream(int sensor_ID, ArrayList<String> data){
-        
+    public List<String> get_Sensor_Info(int sensor_id) 
+    {
+        List<String> lt = new ArrayList<>();
+        try {
+            lt = sensor_Pull_Sensor(sensor_id);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return lt;
+    }
+    
+    public ArrayList<Integer> get_Device_Sensors(int device_id){
+        ArrayList<Integer> ret = new ArrayList<>();
+        try {
+            ret = sensor_Pull_Related_SensorIDs(device_id);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ret;
     }
     
     public void sensorConf(int sensor_Type, int pin_Num, int sensor_ID){
@@ -47,9 +67,7 @@ public class TcpImplements implements TcpInterface{
         
             Sensor_modi_DTO.sensor_Change_Sensortype(t, sensor_ID);
             Sensor_modi_DTO.sensor_Change_Pin(p, sensor_ID);
-        } catch (SQLException ex) {
-            Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
