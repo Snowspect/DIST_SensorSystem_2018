@@ -6,7 +6,6 @@
 package SensorSystemServer;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -96,7 +95,7 @@ public interface SensorSystemInterface {
     *   Get all IDs owned by user
     *   @param user --user id
     */
-    @WebMethod public HashMap<Integer, String> get_ids(int user);
+    @WebMethod public List<String> get_ids(int user);
     
     @WebMethod public List<String> get_Sensor_Data(int user, int sensor_id);
     

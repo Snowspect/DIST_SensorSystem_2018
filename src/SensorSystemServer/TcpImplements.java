@@ -12,11 +12,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.jws.WebService;
 
 /**
  *
- * @author Bruger
+ * @author Patrick Green Knudsen
  */
+@WebService(endpointInterface = "SensorSystemServer.TcpInterface")
 public class TcpImplements implements TcpInterface{
     
     public void oploadData(int sensor_ID, String data){

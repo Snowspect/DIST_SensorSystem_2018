@@ -180,17 +180,17 @@ public class SensorSystemImplements implements SensorSystemInterface {
         return lt;
     }
     
-    public HashMap<Integer, String> get_ids(int user)
+    public List<String> get_ids(int user)
     {
-        HashMap<Integer, String> ret = new HashMap<>();
+        List<String> ret = new ArrayList<>();
         if(activeUsers.containsKey(user)) {
             try {
                 List<Integer> devices_id = get_Devices_ID(user);
                 
                 for(Integer i : devices_id)  
                 {
-                    String s = sensor_Pull_Related_SensorIDs(i);
-                    ret.put(i, s);
+                    String s = i+"-"+sensor_Pull_Related_SensorIDs(i);
+                    ret.add(s);
                 }
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);

@@ -15,10 +15,13 @@ public class ServerMain {
     public static void main(String[] args){
         System.out.println("Starting server service..");
         
-        SensorSystemImplements SSImpl = new SensorSystemImplements();
-        String address = "http://[::]:9901/SensorSystemService";
+        SensorSystemInterface SSImpl = new SensorSystemImplements();
+        TcpInterface tcpImpl = new TcpImplements();
+        String address1 = "http://[::]:9901/SensorSystemService";
+        String address2 = "http://[::]:9902/SensorTcpService";
         
-        Endpoint.publish(address, SSImpl);
+        Endpoint.publish(address1, SSImpl);
+        Endpoint.publish(address2, tcpImpl);
         System.out.println("Starting server service..");
     }
     
