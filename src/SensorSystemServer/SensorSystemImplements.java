@@ -51,7 +51,12 @@ public class SensorSystemImplements implements SensorSystemInterface {
             Service service = Service.create(url, qname);
             Useradmin ba = service.getPort(Useradmin.class);
 
+            
             User b = ba.hentBruger(user, password);
+            
+            if(b.brugernavn == null){
+                
+            }
             String id_string = b.adgangskode + ":" + b.campusnetId + ":" + b.studeretning;
             int id_code = id_string.hashCode();
             activeUsers.put(id_code, b);
