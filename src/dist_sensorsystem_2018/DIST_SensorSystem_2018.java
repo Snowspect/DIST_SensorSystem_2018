@@ -9,6 +9,7 @@ import static Data.Device_DTO.device_CreateDevice;
 import static Data.Sensor_DTO.sensor_CreateSensor;
 import static Data.Device_modi_DTO.device_Pull_all_device_ids;
 import SensorSystemServer.SensorSystemImplements;
+import static Data.Sensor_modi_DTO.sensor_Pull_Related_SensorIDs;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -32,9 +33,13 @@ public class DIST_SensorSystem_2018 {
             Timestamp dx = new Timestamp(dt.getTime());
             //device_CreateDevice(2,"3","42", dx, dx);
             //sensor_CreateSensor("sensor1", 3, "DIGITAL", "36", dx, dx, "4");
-            ArrayList<Integer> tmp = device_Pull_all_device_ids("4");
+            ArrayList<Integer> tmp = device_Pull_all_device_ids("-431922471");
             for (Integer arg : tmp) {
                 System.out.println(arg);
+            }
+            ArrayList<Integer> xt = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs(tmp.get(0).toString());
+            for (Integer integ : xt) {
+                System.out.println(integ);
             }
             /*SensorSystemImplements d = new SensorSystemImplements();
             ArrayList<ArrayList<Integer>> _ids = d.get_ids(42);
