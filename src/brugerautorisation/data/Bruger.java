@@ -1,10 +1,9 @@
-package UserInterface;
+package brugerautorisation.data;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class User implements Serializable {
+public class Bruger implements Serializable {
     // Vigtigt: Sæt versionsnummer så objekt kan læses selvom klassen er ændret!
 
     private static final long serialVersionUID = 12345; // bare et eller andet nr.
@@ -18,13 +17,8 @@ public class User implements Serializable {
     public String efternavn = "testesen";
     public String adgangskode;
     public HashMap<String, Object> ekstraFelter = new HashMap<>();
-    
-    //added
-    public ArrayList<Device> devices = new ArrayList<>(); 
-    public long lastDataPull;
-    
+
     public String toString() {
         return brugernavn + "/" + adgangskode;
     }
-
 }

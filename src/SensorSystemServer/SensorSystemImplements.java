@@ -5,7 +5,6 @@
  */
 package SensorSystemServer;
 
-import Data.Device_DAO;
 import static Data.Device_DTO.*;
 import static Data.Device_modi_DTO.*;
 
@@ -15,7 +14,8 @@ import static Data.Measurement_DTO.*;
 import static Data.Sensor_DTO.*;
 import static Data.Sensor_modi_DTO.*;
 
-import UserInterface.*;
+import brugerautorisation.data.Bruger;
+import brugerautorisation.transport.soap.Brugeradmin;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -37,7 +37,7 @@ import java.util.List;
 @WebService(endpointInterface = "SensorSystemServer.SensorSystemInterface")
 public class SensorSystemImplements implements SensorSystemInterface {
 
-    private HashMap<Integer, User> activeUsers;
+    private HashMap<Integer, Bruger> activeUsers;
 
     public SensorSystemImplements() {
         activeUsers = new HashMap<>();
@@ -49,10 +49,11 @@ public class SensorSystemImplements implements SensorSystemInterface {
             URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
             QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
             Service service = Service.create(url, qname);
-            Useradmin ba = service.getPort(Useradmin.class);
+            Brugeradmin ba = service.getPort(Brugeradmin.class);
 
             
-            User b = ba.hentBruger(user, password);
+            Bruger b = ba.hentBruger(user, password);
+            if(b == null) return 0;
             
             String id_string = b.adgangskode + ":" + b.campusnetId + ":" + b.studeretning;
             int id_code = id_string.hashCode();
