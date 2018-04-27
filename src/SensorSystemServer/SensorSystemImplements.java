@@ -19,6 +19,7 @@ import UserInterface.*;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -86,7 +87,8 @@ public class SensorSystemImplements implements SensorSystemInterface {
         if (activeUsers.containsKey(user)) {
             try {
                 Date dt = new Date();
-                ret = device_CreateDevice(name, user + "", dt.toString(), dt.toString());
+                Timestamp dx = new Timestamp(dt.getTime());
+                ret = device_CreateDevice(2,name, user + "", dx, dx);
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -187,10 +189,20 @@ public class SensorSystemImplements implements SensorSystemInterface {
             try {
                 List<Integer> devices_id = get_Devices_ID(user);
                 
+                ArrayList<Integer> related_sensor_id = new ArrayList<>();
                 for(Integer i : devices_id)  
                 {
+<<<<<<< HEAD
                     String s = i+"-"+sensor_Pull_Related_SensorIDs(i);
                     ret.add(s);
+||||||| merged common ancestors
+                    String s = sensor_Pull_Related_SensorIDs(i);
+                    ret.put(i, s);
+=======
+                    
+                    related_sensor_id = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs(i);
+                    //ret.put(i, s);
+>>>>>>> 92223886bb443b4153feff55958bec66b0f0834f
                 }
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
