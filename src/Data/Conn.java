@@ -16,8 +16,8 @@ import java.sql.SQLException;
  */
 public class Conn 
 {
-    static final String USER = "root"; //dan    
-    static final String PASS = ""; //itElektronik2019!     
-    static final String DRIVER = "com.mysql.jdbc.Driver"; //com.mysql.jdbc.Driver       
-    static final String DATABASE = "jdbc:mysql://localhost:3306/question2"; //jdbc:mysql://128.76.255.24:25800/question    //jdbc:mysql://localhost:3306/question2´    
+    static final String USER = "Dist"; //dan    
+    static final String PASS = "1234"; //itElektronik2019!     
+    static final String DRIVER = "org.mariadb.jdbc.Driver"; //com.mysql.jdbc.Driver //org.mariadb.jdbc.Driver
+    static final String DATABASE = "jdbc:mariadb://159.89.134.40:22/sensorsystem"; //jdbc:mysql://128.76.255.24:25800/question    //jdbc:mysql://localhost:3306/question2´    
 }

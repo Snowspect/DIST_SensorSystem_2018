@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -33,10 +34,11 @@ public class Device_DTO
      * @throws ClassNotFoundException 
      */
         public static String device_CreateDevice(
+                int external_id,
                 String device_name, 
                 String owner,  
-                String lastActive,
-                String created_date
+                Timestamp lastActive,
+                Timestamp created_date
                                          ) throws SQLException, ClassNotFoundException //get question from database
         {
         /**
@@ -46,23 +48,27 @@ public class Device_DTO
         try
         {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            //Conn.DRIVER;
+            /*Connection conn = DriverManager.getConnection //Connection is a built in SQL class
                     (
                             Conn.DATABASE,
                             Conn.USER,
                             Conn.PASS
-                    );
+                    );*/
+            Connection conn = DriverManager.getConnection("jdbc:mariadb://159.89.134.40:3306/sensorsystem?user=Dist&password=*A4B6157319038724E3560894F7F932C8886EBFCF"); //
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO device (NAME,OWNER,LASTACTIVE_DATE,CREATEDATE) VALUES (?,?,?,?)";
+            String query = "INSERT INTO device (EXTERNAL_ID,NAME,OWNER,LASTACTIVE_DATE,CREATED_DATE) VALUES (?,?,?,?,?)";
             
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             PreparedStatement dw = conn.prepareStatement(query);
-            preparedStmt.setString(1, device_name);
-            preparedStmt.setString(2, owner);
-            preparedStmt.setString(3, lastActive);
-            preparedStmt.setString(4, created_date);
+            preparedStmt.setInt(1, external_id);
+            preparedStmt.setString(2, device_name);
+            preparedStmt.setString(3, owner);
+            preparedStmt.setTimestamp(4, lastActive);
+            preparedStmt.setTimestamp(5, created_date);
+
 
             // execute the preparedstatement
             preparedStmt.execute();
