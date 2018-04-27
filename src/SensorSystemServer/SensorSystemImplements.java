@@ -187,16 +187,20 @@ public class SensorSystemImplements implements SensorSystemInterface {
         return lt;
     }
     
-    public ArrayList<ArrayList<Integer>> get_ids(int user)
+    public List<String> get_ids(int user)
     {
-        ArrayList<ArrayList<Integer>> related_sensor_id = new ArrayList<>();
+        List<String> ret = new ArrayList<>();
         if(activeUsers.containsKey(user)) {
             try {
                 List<Integer> devices_id = get_Devices_ID(user);
                 
+                ArrayList<Integer> related_sensor_id = new ArrayList<>();
                 for(Integer i : devices_id)  
-                {   
-                    related_sensor_id.add((ArrayList<Integer>) sensor_Pull_Related_SensorIDs(i));
+                {
+                    String s = sensor_Pull_Related_SensorIDs(i);
+                    ret.put(i, s);
+                    
+                    related_sensor_id = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs(i);
                     //ret.put(i, s);
                 }
             } catch (SQLException | ClassNotFoundException ex) {
@@ -204,7 +208,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             }
             
         }
-        return related_sensor_id;
+        return ret;
     }
 
 
