@@ -56,7 +56,7 @@ public class Device_DTO
                             Conn.USER,
                             Conn.PASS
                     );*/
-            Connection conn = DriverManager.getConnection("jdbc:mariadb://159.89.134.40:3306/sensorsystem?user=Dist&password=*A4B6157319038724E3560894F7F932C8886EBFCF"); //
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
             String query = "INSERT INTO device (EXTERNAL_ID,NAME,OWNER,LASTACTIVE_DATE,CREATED_DATE) VALUES (?,?,?,?,?)";
             

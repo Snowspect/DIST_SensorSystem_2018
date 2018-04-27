@@ -184,12 +184,14 @@ public class SensorSystemImplements implements SensorSystemInterface {
         }
         return lt;
     }
-    
+        
     public ArrayList<ArrayList<Integer>> get_ids(int user)
     {
+        System.out.println("BOOTY");
         ArrayList<ArrayList<Integer>> related_sensor_id = new ArrayList<>();   
         if(activeUsers.containsKey(user)) {
             try {
+                System.out.println("ASSWHOOP");
                 List<Integer> devices_id = get_Devices_ID(user);
 
                 for(Integer i : devices_id)  
@@ -213,10 +215,19 @@ public class SensorSystemImplements implements SensorSystemInterface {
     private List<Integer> get_Devices_ID(int user) throws SQLException, ClassNotFoundException 
     {
         List<Integer> ret = new ArrayList<>();
-        List<Device_DAO> devices = device_Pull_All_Devices(user+"");
-        devices.stream().map((dd) -> dd.id_Device ).forEachOrdered((dvc) -> {
-            ret.add(dvc);
-        });
+        String userString = user + "";
+        System.out.println(user);
+        ret = device_Pull_all_device_ids(userString);
+        for (Integer integer : ret) {
+            System.out.println("DeviceID 1:" + integer);
+        }
+//        List<Device_DAO> devices = device_Pull_All_Devices(user+"");
+//        devices.stream().map((dd) -> dd.id_Device ).forEachOrdered((dvc) -> {
+//            ret.add(dvc);
+//        });
+//        for (int device_id : ret) {
+//            System.out.println(device_id);
+//        }
         return ret;
     }
 
