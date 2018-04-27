@@ -241,7 +241,7 @@ public class Device_modi_DTO {
     public static ArrayList<Integer> device_Pull_all_device_ids(String owner) {
         ArrayList<Integer> tmp = new ArrayList<>();
         try {
-            Class.forName(Conn.DRIVER);
+            Class.forName("org.mariadb.jdbc.Driver");
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT ID_DEVICE FROM device WHERE OWNER = ?";
