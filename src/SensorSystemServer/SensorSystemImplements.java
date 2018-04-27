@@ -70,7 +70,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
     
     public String create_Sensor(int user, 
                                 String name, 
-                                String id_device, 
+                                int id_device, 
                                 String sensorType, 
                                 String pin) 
     {
@@ -78,7 +78,8 @@ public class SensorSystemImplements implements SensorSystemInterface {
         if (activeUsers.containsKey(user)) {
             try {
                 Date dt = new Date();
-                ret = sensor_CreateSensor(name, id_device, sensorType, pin, dt.toString(), dt.toString());
+                Timestamp dx = new Timestamp(dt.getTime());
+                ret = sensor_CreateSensor(name, id_device, sensorType, pin, dx, dx, "4");
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -196,10 +197,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 
                 ArrayList<Integer> related_sensor_id = new ArrayList<>();
                 for(Integer i : devices_id)  
-                {
-                    String s = sensor_Pull_Related_SensorIDs(i);
-                    ret.put(i, s);
-                    
+                {   
                     related_sensor_id = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs(i);
                     //ret.put(i, s);
                 }

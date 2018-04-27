@@ -32,11 +32,11 @@ public interface SensorSystemInterface {
     *   @param sensorType   -- Type, Either put ANALOG or DIGITAL
     *   @param pin          -- pin number
     */
-    @WebMethod public String create_Sensor(int user,
-                                            String name, 
-                                            String id_device, 
-                                            String sensorType, 
-                                            String pin);
+    @WebMethod public String create_Sensor(int user, 
+                                    String name, 
+                                    int id_device, 
+                                    String sensorType, 
+                                    String pin);
     
     /*
     *   Create Device

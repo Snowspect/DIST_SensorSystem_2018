@@ -69,11 +69,11 @@ public class Sensor_DTO {
                             Conn.PASS
                     );*/
             Connection conn = DriverManager.getConnection("jdbc:mariadb://159.89.134.40:3306/sensorsystem?user=Dist&password=*A4B6157319038724E3560894F7F932C8886EBFCF"); //
-              String query = "INSERT INTO device (NAME,ID_DEVICE_REF,SENSORTYPE,PIN,CREATED_DATE,LASTACTIVE_DATE,UPDATETIME_MIN) VALUES (?,?,?,?,?,?,?)";          
+              String query = "INSERT INTO sensor (NAME,ID_DEVICE_REF,SENSORTYPE,PIN,CREATED_DATE,LASTACTIVE_DATE,UPDATETIME_MINUTES) VALUES (?,?,?,?,?,?,?)";          
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, name);
-            preparedStmt.setString(2, id_device);
+            preparedStmt.setInt(2, id_device);
             preparedStmt.setString(3, sensorType);
             preparedStmt.setString(4, pin);
             preparedStmt.setTimestamp(5, created_date);

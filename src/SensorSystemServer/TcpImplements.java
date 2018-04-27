@@ -49,7 +49,7 @@ public class TcpImplements implements TcpInterface{
     public ArrayList<Integer> get_Device_Sensors(int device_id){
         ArrayList<Integer> ret = new ArrayList<>();
         try {
-            ret = sensor_Pull_Related_SensorIDs(device_id);
+            ret = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs(device_id);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
         }

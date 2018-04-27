@@ -35,6 +35,5 @@ public class DIST_SensorSystem_2018 {
             e.printStackTrace();
         }
         System.out.println("Helllloo");
-
-    }    
+    }
 }
