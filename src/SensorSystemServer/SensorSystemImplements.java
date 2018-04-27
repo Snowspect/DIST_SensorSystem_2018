@@ -198,7 +198,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 for(Integer i : devices_id)  
                 {   
                     //each device returns a list of integer id's. each list is added to a list of integer lists called related_sensor_id
-                    related_sensor_id.add((ArrayList<Integer>) sensor_Pull_Related_SensorIDs(i));
+                    related_sensor_id.add((ArrayList<Integer>) sensor_Pull_Related_SensorIDs(i+""));
                     //ret.put(i, s);
                 }
                 System.out.println("CHAPLESS");
@@ -220,7 +220,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
         return ret;
     }
     
-    public List<Integer> get_Sensors_ID(int user, int device_id)  
+    public List<Integer> get_Sensors_ID(int user, String device_id)  
     {
         List<Integer> ret = new ArrayList<>();
         if(activeUsers.containsKey(user)) {
