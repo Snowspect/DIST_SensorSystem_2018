@@ -46,8 +46,8 @@ public class TcpImplements implements TcpInterface{
         return lt;
     }
     
-    public ArrayList<Integer> get_Device_Sensors(int device_id){
-        ArrayList<Integer> ret = new ArrayList<>();
+    public List<Integer> get_Device_Sensors(int device_id){
+        List<Integer> ret = new ArrayList<>();
         try {
             ret = sensor_Pull_Related_SensorIDs(device_id);
         } catch (SQLException | ClassNotFoundException ex) {
