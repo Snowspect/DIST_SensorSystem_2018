@@ -194,13 +194,14 @@ public class SensorSystemImplements implements SensorSystemInterface {
             try {
                 System.out.println("ASSWHOOP");
                 List<Integer> devices_id = get_Devices_ID(user);
-
+                System.out.println("MYNIGGA");
                 for(Integer i : devices_id)  
                 {   
                     //each device returns a list of integer id's. each list is added to a list of integer lists called related_sensor_id
                     related_sensor_id.add((ArrayList<Integer>) sensor_Pull_Related_SensorIDs(i));
                     //ret.put(i, s);
                 }
+                System.out.println("CHAPLESS");
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -218,7 +219,9 @@ public class SensorSystemImplements implements SensorSystemInterface {
         List<Integer> ret = new ArrayList<>();
         String userString = user + "";
         System.out.println(user);
+        System.out.println("ASSEY");
         ret = device_Pull_all_device_ids(userString);
+        System.out.println("butty");
         for (Integer integer : ret) {
             System.out.println("DeviceID 1:" + integer);
         }
