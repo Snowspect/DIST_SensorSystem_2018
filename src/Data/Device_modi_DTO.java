@@ -77,6 +77,7 @@ public class Device_modi_DTO {
             // the mysql insert statement, adding a person into person table
             String query = "UPDATE INTO device (LASTACTIVE_DATE) VALUES (?)";
 
+            
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setInt(1, lastActive_Date);
