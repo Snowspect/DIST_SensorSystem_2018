@@ -24,7 +24,7 @@ public class client {
     {
 
         Scanner reader = new Scanner(System.in);
-        URL url = new URL("http://159.89.134.40:9901/SensorSystemService?wsdl");
+        URL url = new URL("http://178.62.85.246:9901/SensorSystemService?wsdl");
         QName qname = new QName("http://SensorSystemServer/", "SensorSystemImplementsService");
         Service service = Service.create(url, qname);
         SensorSystemInterface s = service.getPort(SensorSystemInterface.class);

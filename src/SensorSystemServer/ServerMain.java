@@ -24,7 +24,6 @@ public class ServerMain {
         Endpoint.publish(address2, tcpImpl);
         System.out.println("Starting server service..");
         
-        SSImpl.
     }
     
 }
