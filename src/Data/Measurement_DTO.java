@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Timestamp;
 
 /**
  *
@@ -30,8 +31,8 @@ public class Measurement_DTO {
      */
     public static String createMeasurement(
             int id_sensor_ref, 
-            String data,
-            long created_timestamp
+            int data,
+            Timestamp created_timestamp
                                      ) throws SQLException, ClassNotFoundException //get question from database
     {
         //try to connect to jdbc and create user
@@ -40,13 +41,13 @@ public class Measurement_DTO {
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO device (ID_MEASUREMENT,ID_SENSOR_REF,DATA) VALUES (?,?,?)";
+            String query = "INSERT INTO measurement (ID_SENSOR_REF,DATA,DATA_DATE_CREATED) VALUES (?,?,?)";
 
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setInt(1, id_sensor_ref);
-            preparedStmt.setString(2, data);
-            preparedStmt.setLong(3, created_timestamp);
+            preparedStmt.setInt(2, data);
+            preparedStmt.setTimestamp(3, created_timestamp);
 
             // execute the preparedstatement
             preparedStmt.execute();

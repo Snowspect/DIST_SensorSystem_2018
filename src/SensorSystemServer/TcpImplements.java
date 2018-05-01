@@ -11,6 +11,7 @@ import static Data.Sensor_DTO.sensor_Pull_Sensor;
 import Data.Sensor_modi_DTO;
 import static Data.Sensor_modi_DTO.sensor_Pull_Related_SensorIDs;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,11 +26,13 @@ import javax.jws.WebService;
 @WebService(endpointInterface = "SensorSystemServer.TcpInterface")
 public class TcpImplements implements TcpInterface{
     
-    public void oploadData(int sensor_ID, String data){
+    public void oploadData(int sensor_ID, int data){
         Date d = new Date();
+        Timestamp tp = new Timestamp(d.getTime());
         
         try {
-            createMeasurement(sensor_ID, data ,d.getTime());
+            System.out.println("HALLO MAN");
+            createMeasurement(sensor_ID, data ,tp);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -49,7 +52,7 @@ public class TcpImplements implements TcpInterface{
     public ArrayList<Integer> get_Device_Sensors(int device_id){
         ArrayList<Integer> ret = new ArrayList<>();
         try {
-            ret = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs(device_id+"");
+            ret = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs(device_id);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
         }

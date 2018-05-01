@@ -73,11 +73,13 @@ public class Device_DTO
             return "device_created";
         } catch (SQLException e)
         {
+			e.printStackTrace();
             System.err.println("Got an sql exception!");
             System.err.println(e.getMessage());
             return e.getMessage();
         } catch (Exception e)
         {
+			e.printStackTrace();
             System.err.println("Got an exception!");
             System.err.println(e.getMessage());
             return e.getMessage();
@@ -90,13 +92,9 @@ public class Device_DTO
     {
         ArrayList<String> tmp = new ArrayList<String>();
         try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
-
+            // create a mysql database connection
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             String query = "SELECT * FROM device WHERE ID_DEVICE = ?";
 
             PreparedStatement preparedStmt = conn.prepareStatement(query);
@@ -121,13 +119,9 @@ public class Device_DTO
     {
         ArrayList<Device_DAO> tmp = new ArrayList<>();
         try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
-
+            // create a mysql database connection
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             String query = "SELECT * FROM device WHERE OWNER = ?";
 
             PreparedStatement preparedStmt = conn.prepareStatement(query);
@@ -171,12 +165,9 @@ public class Device_DTO
         
         //TODO FIX SO THAT IT DELETES A DEVICE
         try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
+            // create a mysql database connection
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = " WHERE ID_DEVICE = ?";
 

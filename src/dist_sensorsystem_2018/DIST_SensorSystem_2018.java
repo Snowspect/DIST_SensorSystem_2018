@@ -10,6 +10,7 @@ import static Data.Sensor_DTO.sensor_CreateSensor;
 import static Data.Device_modi_DTO.device_Pull_all_device_ids;
 import SensorSystemServer.SensorSystemImplements;
 import static Data.Sensor_modi_DTO.sensor_Pull_Related_SensorIDs;
+import static Data.Measurement_DTO.createMeasurement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class DIST_SensorSystem_2018 {
 
     /**
      * @param args the command line arguments
+     * @throws java.sql.SQLException
+     * @throws java.lang.ClassNotFoundException
      */
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         // TODO code application logic here
@@ -31,31 +34,25 @@ public class DIST_SensorSystem_2018 {
             System.out.println("hellooooo1");
             Date dt = new Date();
             Timestamp dx = new Timestamp(dt.getTime());
-            device_CreateDevice(2,"3","42", dx, dx);
-            //sensor_CreateSensor("sensor1", 3, "DIGITAL", "36", dx, dx, "4");
-            //ArrayList<Integer> tmp = device_Pull_all_device_ids("-431922471");
-            //for (Integer arg : tmp) {
-            //    System.out.println(arg);
-            //}
-            //System.out.println(tmp.isEmpty());
-            //ArrayList<Integer> xt = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs();
-            //for (Integer integ : xt) {
-            //    System.out.println(integ);
-            //}
-            /*SensorSystemImplements d = new SensorSystemImplements();
-            ArrayList<ArrayList<Integer>> _ids = d.get_ids(42);
-            if(_ids == null)
-            {
-                System.out.println("Her er ingen information");
+            createMeasurement(3, 323223232, dx);
+            //device_CreateDevice(2,"3","42", dx, dx);
+            //sensor_CreateSensor("sensor1", 1, "DIGITAL", "36", dx, dx, "4");
+            
+/*            ArrayList<Integer> tmp = device_Pull_all_device_ids("42");
+            for (Integer arg : tmp) {
+                System.out.println(arg);
             }
-            else{
-                System.out.println("");
-                for (ArrayList<Integer> _id : _ids) {
-                    for (Integer integer : _id) {
-                        System.out.println(_id);
+            ArrayList<ArrayList<Integer>> xt = new ArrayList<>();
+            for (Integer integer : tmp) {
+                 xt.add((ArrayList<Integer>) sensor_Pull_Related_SensorIDs(integer)); 
+                for (ArrayList<Integer> arrayList : xt) {
+                    for (Integer integer1 : arrayList) {
+                        System.out.println(integer1);
                     }
                 }
-            }*/
+            }
+*/
+            
         } catch (Exception e) {
             System.out.println("hejsa");
             e.printStackTrace();

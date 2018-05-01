@@ -51,7 +51,7 @@ public class Sensor_DTO {
             // create a mysql database connection
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
 
-            Connection conn = DriverManager.getConnection("jdbc:mariadb://159.89.134.40:3306/sensorsystem?user=Dist&password=*A4B6157319038724E3560894F7F932C8886EBFCF"); //
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING); //
               String query = "INSERT INTO sensor (NAME,ID_DEVICE_REF,SENSORTYPE,PIN,CREATED_DATE,LASTACTIVE_DATE,UPDATETIME_MINUTES) VALUES (?,?,?,?,?,?,?)";          
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);

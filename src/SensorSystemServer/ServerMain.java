@@ -23,13 +23,7 @@ public class ServerMain {
         Endpoint.publish(address1, SSImpl);
         Endpoint.publish(address2, tcpImpl);
         System.out.println("Starting server service..");
-<<<<<<< HEAD
-        
-||||||| merged common ancestors
-        
-        SSImpl.
-=======
->>>>>>> cb635f7ba6f80f7a36b72022839553ea3146f5c0
+
     }
     
 }

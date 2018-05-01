@@ -29,36 +29,12 @@ public class client {
         Service service = Service.create(url, qname);
         SensorSystemInterface s = service.getPort(SensorSystemInterface.class);
 
-
-        int id = login(s, reader);
+        System.out.println("111");
         
-        System.out.print(id);
-        
-        ArrayList<ArrayList<Integer>> ids = s.get_ids(id);
-        
-        if(ids.isEmpty())
-            return;
-        System.out.print(ids);
+        int id = s.login("s164916", "FEDpik");
+        System.out.println("f you");
+        String str = s.create_Device(42, "COOCK");
+        System.out.println(str);
     }
-    
-    public static int login(SensorSystemInterface server, Scanner s) {
-        int id = 0;
-        while(id == 0) {
-            
-            System.out.println("Input username:");
-            String username = s.nextLine();
-            System.out.println("Input password:");
-            String password = s.nextLine();
-            
-            try {
-                System.out.println("HEJ");
-                id = server.login(username, password);
-            } catch (Exception e) {
-                System.out.println("Login failed..");
-            }
-        }
-        return id;
-    }    
-        
     
 }
