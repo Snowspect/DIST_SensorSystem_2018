@@ -49,25 +49,8 @@ public class Sensor_DTO {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            //Class.forName(Conn.DRIVER); //Conn is our connection file
-            //Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-             /*       (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    ); */
-            // the mysql insert statement, adding a person into person table
-//            String query = "INSERT INTO device (NAME,ID_DEVICE_REF,SENSORTYPE,PIN,CREATED_DATE,LASTACTIVE_DATE,UPDATETIME_MIN) VALUES (?,?,?,?,?,?,?)";
-
-                        // create a mysql database connection
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
-            //Conn.DRIVER;
-            /*Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );*/
+
             Connection conn = DriverManager.getConnection("jdbc:mariadb://159.89.134.40:3306/sensorsystem?user=Dist&password=*A4B6157319038724E3560894F7F932C8886EBFCF"); //
               String query = "INSERT INTO sensor (NAME,ID_DEVICE_REF,SENSORTYPE,PIN,CREATED_DATE,LASTACTIVE_DATE,UPDATETIME_MINUTES) VALUES (?,?,?,?,?,?,?)";          
             // create the mysql insert preparedstatement
@@ -105,12 +88,8 @@ public class Sensor_DTO {
     {
         ArrayList<String> tmp = new ArrayList<String>();
         try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT * FROM sensor WHERE ID_SENSOR = ?";
 
@@ -146,12 +125,8 @@ public class Sensor_DTO {
     {
         ArrayList<Sensor_DAO> tmp = new ArrayList<>();
         try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT * FROM sensor WHERE OWNER = ?";
 

@@ -37,13 +37,8 @@ public class Measurement_DTO {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
             String query = "INSERT INTO device (ID_MEASUREMENT,ID_SENSOR_REF,DATA) VALUES (?,?,?)";
 
@@ -76,12 +71,8 @@ public class Measurement_DTO {
     {
         ArrayList<String> tmp = new ArrayList<>();
         try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT * FROM measurement WHERE ID_SENSOR_REF = ?";
 

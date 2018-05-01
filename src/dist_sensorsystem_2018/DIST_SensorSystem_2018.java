@@ -31,16 +31,17 @@ public class DIST_SensorSystem_2018 {
             System.out.println("hellooooo1");
             Date dt = new Date();
             Timestamp dx = new Timestamp(dt.getTime());
-            //device_CreateDevice(2,"3","42", dx, dx);
+            device_CreateDevice(2,"3","42", dx, dx);
             //sensor_CreateSensor("sensor1", 3, "DIGITAL", "36", dx, dx, "4");
-            ArrayList<Integer> tmp = device_Pull_all_device_ids("-431922471");
-            for (Integer arg : tmp) {
-                System.out.println(arg);
-            }
-            ArrayList<Integer> xt = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs(tmp.get(0).toString());
-            for (Integer integ : xt) {
-                System.out.println(integ);
-            }
+            //ArrayList<Integer> tmp = device_Pull_all_device_ids("-431922471");
+            //for (Integer arg : tmp) {
+            //    System.out.println(arg);
+            //}
+            //System.out.println(tmp.isEmpty());
+            //ArrayList<Integer> xt = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs();
+            //for (Integer integ : xt) {
+            //    System.out.println(integ);
+            //}
             /*SensorSystemImplements d = new SensorSystemImplements();
             ArrayList<ArrayList<Integer>> _ids = d.get_ids(42);
             if(_ids == null)

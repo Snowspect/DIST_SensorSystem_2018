@@ -16,7 +16,7 @@ import java.sql.SQLException;
  */
 public class Conn 
 {
-    static final String CONNECTION_STRING = "jdbc:mariadb://159.89.134.40:3306/sensorsystem?user=Dist&password=*A4B6157319038724E3560894F7F932C8886EBFCF";
+    static final String CONNECTION_STRING = "jdbc:mariadb://178.62.85.246:3306/sensorsystem?user=Dist&password=";
     static final String USER = "Dist"; //dan    
     static final String PASS = "1234"; //itElektronik2019!     
     static final String DRIVER = "org.mariadb.jdbc.Driver"; //com.mysql.jdbc.Driver //org.mariadb.jdbc.Driver
