@@ -20,30 +20,27 @@ import java.util.ArrayList;
 public class Device_modi_DTO {
 
     /**
-     * Changes owner
+     * Changes owner with a device_id
      *
-     * @param owner
+     * @param owner the owner id to be changed: currently int return value from javabog.dk
+     * @param device_id the id of the device you wish to change.
      * @return
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public static String device_Change_Owner(String owner) throws SQLException, ClassNotFoundException {
+    public static String device_Change_Owner(String owner, int device_id) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO device (OWNER) VALUES (?)";
+            String query = "INSERT INTO device (OWNER) VALUES (?) WHERE ID_DEVICE = ?";
 
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, owner);
+            preparedStmt.setInt(2, device_id);
             // execute the preparedstatement
             preparedStmt.execute();
 
@@ -75,15 +72,10 @@ public class Device_modi_DTO {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO device (LASTACTIVE_DATE) VALUES (?)";
+            String query = "UPDATE INTO device (LASTACTIVE_DATE) VALUES (?)";
 
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
@@ -119,13 +111,8 @@ public class Device_modi_DTO {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
             String query = "INSERT INTO device (NAME) VALUES (?)";
 
@@ -157,12 +144,8 @@ public class Device_modi_DTO {
     public static int device_Pull_DeviceID(String device_Name) throws SQLException, ClassNotFoundException {
         int tmp = 0;
         try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT ID_DEVICE FROM device WHERE NAME = ?";
 
@@ -186,12 +169,8 @@ public class Device_modi_DTO {
     public static String device_Pull_DeviceName(int device_ID) throws SQLException, ClassNotFoundException {
         String tmp = "";
         try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT NAME FROM device WHERE ID_DEVICE = ?";
 
@@ -215,12 +194,8 @@ public class Device_modi_DTO {
     public static String device_Pull_Owner(int device_ID) throws SQLException, ClassNotFoundException {
         String tmp = "";
         try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT ID_DEVICE FROM device WHERE NAME = ?";
 
@@ -241,7 +216,7 @@ public class Device_modi_DTO {
     public static ArrayList<Integer> device_Pull_all_device_ids(String owner) {
         ArrayList<Integer> tmp = new ArrayList<>();
         try {
-            Class.forName("org.mariadb.jdbc.Driver");
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT ID_DEVICE FROM device WHERE OWNER = ?";

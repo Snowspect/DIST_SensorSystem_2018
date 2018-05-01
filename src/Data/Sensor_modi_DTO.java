@@ -30,13 +30,8 @@ public class Sensor_modi_DTO {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
             String query = "INSERT INTO sensor (ID_DEVICE_REF) VALUES (?)";
 
@@ -73,13 +68,9 @@ public class Sensor_modi_DTO {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
+            
             // the mysql insert statement, adding a person into person table
             String query = "INSERT INTO sensor (SENSORTYPE) VALUES (?) WHERE ID_SENSOR = ?";
 
@@ -117,13 +108,8 @@ public class Sensor_modi_DTO {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
             String query = "INSERT INTO sensor (PIN) VALUES (?) WHERE ID_SENSOR = ?";
 
@@ -161,13 +147,9 @@ public class Sensor_modi_DTO {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
+            
             // the mysql insert statement, adding a person into person table
             String query = "INSERT INTO sensor (LASTACTIVE_DATE) VALUES (?)";
 
@@ -204,13 +186,9 @@ public class Sensor_modi_DTO {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
+
             // the mysql insert statement, adding a person into person table
             String query = "INSERT INTO sensor (UPDATETIME_MINUTES) VALUES (?)";
 
@@ -247,13 +225,9 @@ public class Sensor_modi_DTO {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
+
             // the mysql insert statement, adding a person into person table
             String query = "INSERT INTO sensor (NAME) VALUES (?)";
 
@@ -286,12 +260,8 @@ public class Sensor_modi_DTO {
     {
         ArrayList<Integer> tmp = new ArrayList<>();
         try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT ID_SENSOR FROM sensor WHERE ID_DEVICE_REF = ?";
 

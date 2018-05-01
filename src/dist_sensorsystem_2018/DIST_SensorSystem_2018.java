@@ -37,10 +37,11 @@ public class DIST_SensorSystem_2018 {
             for (Integer arg : tmp) {
                 System.out.println(arg);
             }
-            ArrayList<Integer> xt = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs(tmp.get(0).toString());
-            for (Integer integ : xt) {
-                System.out.println(integ);
-            }
+            System.out.println(tmp.isEmpty());
+            //ArrayList<Integer> xt = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs();
+            //for (Integer integ : xt) {
+            //    System.out.println(integ);
+            //}
             /*SensorSystemImplements d = new SensorSystemImplements();
             ArrayList<ArrayList<Integer>> _ids = d.get_ids(42);
             if(_ids == null)

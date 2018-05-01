@@ -29,7 +29,7 @@ public class Device_DTO
      * @param configured_date --will be pulled from current date
      * @param lastActive --will be pulled from current date
      * @param created_date --will be pulled from current date
-     * @return
+     * @return 
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
@@ -49,13 +49,6 @@ public class Device_DTO
         {
             // create a mysql database connection
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
-            //Conn.DRIVER;
-            /*Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );*/
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
             String query = "INSERT INTO device (EXTERNAL_ID,NAME,OWNER,LASTACTIVE_DATE,CREATED_DATE) VALUES (?,?,?,?,?)";

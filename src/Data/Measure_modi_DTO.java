@@ -31,13 +31,8 @@ public class Measure_modi_DTO {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
             String query = "INSERT INTO measurement (ID_SENSOR_REF) VALUES (?)";
 
@@ -67,12 +62,8 @@ public class Measure_modi_DTO {
     {
         ArrayList<Measurement_DAO> tmp = new ArrayList<>();
         try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT * FROM measurement WHERE ID_SENSOR_REF = ?";
 
@@ -99,12 +90,8 @@ public class Measure_modi_DTO {
     {
         ArrayList<Measurement_DAO> tmp = new ArrayList<>();
          try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT * FROM measurement WHERE DATA_DATE_CREATED >= ? AND DATA_DATE_CREATED <= ? AND ID_SENSOR_REF = ?";
 
@@ -134,12 +121,8 @@ public class Measure_modi_DTO {
         Measurement_DAO tmp = new Measurement_DAO();
         
         try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT * FROM measurement WHERE ID_MEASUREMENT = ?";
 
@@ -165,12 +148,8 @@ public class Measure_modi_DTO {
     {
         ArrayList<String> tmp = new ArrayList<>();
         try {
-            Class.forName(Conn.DRIVER);
-            Connection conn = DriverManager.getConnection(
-                    Conn.DATABASE,
-                    Conn.USER,
-                    Conn.PASS
-            );
+            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT DATA FROM measurement WHERE DATA_DATE_CREATED >= ? AND DATA_DATE_CREATED <= ? AND ID_SENSOR_REF = ?";
 
