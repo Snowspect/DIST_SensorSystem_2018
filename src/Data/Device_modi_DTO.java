@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 /**
@@ -68,19 +69,19 @@ public class Device_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public static String device_Change_LastActive(int lastActive_Date) throws SQLException, ClassNotFoundException {
+    public static String device_Change_LastActive(Timestamp lastActive_Date, int device_id) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
-            String query = "UPDATE INTO device (LASTACTIVE_DATE) VALUES (?)";
-
+            String query = "UPDATE device SET LASTACTIVE_DATE = ? WHERE DEVICE_ID = ?";
             
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setInt(1, lastActive_Date);
+            preparedStmt.setTimestamp(1, lastActive_Date);
+            preparedStmt.setInt(2, device_id);
             // execute the preparedstatement
             preparedStmt.execute();
 
@@ -115,8 +116,8 @@ public class Device_modi_DTO {
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO device (NAME) VALUES (?)";
-
+            String query = "UPDATE device SET NAME = ? WHERE DEVICE_ID = ?";
+            
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, device_name);
@@ -149,7 +150,7 @@ public class Device_modi_DTO {
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT ID_DEVICE FROM device WHERE NAME = ?";
-
+            
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, device_Name);
 
