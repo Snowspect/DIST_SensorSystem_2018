@@ -5,6 +5,9 @@
         <group>
             <file>file:/C:/Users/Bruger/Documents/GitHub/DIST_SensorSystem_2018/src/SensorSystemServer/SensorSystemImplements.java</file>
             <file>file:/C:/Users/Bruger/Documents/GitHub/DIST_SensorSystem_2018/src/SensorSystemServer/client.java</file>
+            <file>file:/C:/Users/Bruger/Documents/GitHub/DIST_SensorSystem_2018/src/SensorSystemServer/SensorSystemInterface.java</file>
+            <file>file:/C:/Users/Bruger/Documents/GitHub/DIST_SensorSystem_2018/src/Data/Device_DTO.java</file>
+            <file>file:/C:/Users/Bruger/Documents/GitHub/DIST_SensorSystem_2018/src/SensorSystemServer/TcpImplements.java</file>
         </group>
     </open-files>
 </project-private>

@@ -38,12 +38,34 @@ import java.util.List;
 public class SensorSystemImplements implements SensorSystemInterface {
 
     private HashMap<Integer, Bruger> activeUsers;
+    private HashMap<Bruger, Date> lastActive;
 
     public SensorSystemImplements() {
         activeUsers = new HashMap<>();
+        lastActive = new HashMap<>();
     }
+    
+    private void opdateUser(int id)
+    {
+        
+        Bruger b = activeUsers.get(id);
+        Date currentTime = new Date();
+        Date lastRequestTime = lastActive.get(b);
+        
+        if (lastRequestTime.getTime() + 300000 < currentTime.getTime())
+        {
+            lastActive.replace(b, lastRequestTime, currentTime);
+        }
+        else
+        {
+            lastActive.remove(b);
+            activeUsers.remove(id);            
+        }
+    }
+    
 
-    public int login(String user, String password) {
+    public int login(String user, String password)
+    {
         try {
             System.out.println("Login: " + user);
             URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
@@ -53,13 +75,18 @@ public class SensorSystemImplements implements SensorSystemInterface {
 
             
             Bruger b = ba.hentBruger(user, password);
-            if(b == null) return 0;
-            
-            String id_string = b.adgangskode + ":" + b.campusnetId + ":" + b.studeretning;
-            int id_code = id_string.hashCode();
-            activeUsers.put(id_code, b);
-            return id_code;
-
+            if(b == null){
+                System.out.print("user was null");
+                return 0;
+            }
+            else
+            {
+                String id_string = b.adgangskode + ":" + b.campusnetId + ":" + b.studeretning;
+                int id_code = id_string.hashCode();
+                activeUsers.put(id_code, b);
+                lastActive.put(b, new Date());
+                return id_code;
+            }
         } catch (Exception ex) {
             Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
@@ -73,6 +100,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                                 String pin) 
     {
         String ret = "";
+        opdateUser(user);
         if (activeUsers.containsKey(user)) {
             try {
                 Date dt = new Date();
@@ -88,6 +116,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
     public String create_Device(int user, String name) 
     {
         String ret = "";
+        opdateUser(user);
         if (activeUsers.containsKey(user)) {
             try {
                 Date dt = new Date();
@@ -108,6 +137,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                                 String name) 
     {
         String status = "Something went wrong";
+        opdateUser(user);
         if (activeUsers.containsKey(user)) {
             try {
                 //Change device its connected to
@@ -146,6 +176,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                                 String name) 
     {
         String status = "Something went wrong";
+        opdateUser(user);
         if (activeUsers.containsKey(user)) {
             try {
                 String tmp = device_Change_Owner(owner);
@@ -159,10 +190,10 @@ public class SensorSystemImplements implements SensorSystemInterface {
         return status;
     }
 
-
     public List<String> get_Sensor_Info(int user, int sensor_id) 
     {
         List<String> lt = new ArrayList<>();
+        opdateUser(user);
         if (activeUsers.containsKey(user)) {
             try {
                 lt = sensor_Pull_Sensor(sensor_id);
@@ -176,6 +207,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
     public List<String> get_Device_Info(int user, int device_id) 
     {
         List<String> lt = new ArrayList<>();
+        opdateUser(user);
         if(activeUsers.containsKey(user)) {
             try {
                 lt = device_Pull_Device(device_id);
@@ -188,24 +220,20 @@ public class SensorSystemImplements implements SensorSystemInterface {
         
     public ArrayList<ArrayList<Integer>> get_ids(int user)
     {
-        System.out.println("BOOTY");
         ArrayList<ArrayList<Integer>> related_sensor_id = new ArrayList<>();   
+        opdateUser(user);
         if(activeUsers.containsKey(user)) {
             try {
-                System.out.println("ASSWHOOP");
                 List<Integer> devices_id = get_Devices_ID_p(user);
-                System.out.println("MYNIGGA");
                 for(Integer i : devices_id)  
                 {   
                     //each device returns a list of integer id's. each list is added to a list of integer lists called related_sensor_id
                     related_sensor_id.add((ArrayList<Integer>) sensor_Pull_Related_SensorIDs(i+""));
                     //ret.put(i, s);
                 }
-                System.out.println("CHAPLESS");
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
         }
         return  related_sensor_id;
     }
@@ -213,6 +241,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
     public List<Integer> get_Devices_ID(int user)  
     {
         List<Integer> ret = new ArrayList<>();
+        opdateUser(user);
         if(activeUsers.containsKey(user)) {
             String userString = user + "";
             ret = device_Pull_all_device_ids(userString);
@@ -223,8 +252,8 @@ public class SensorSystemImplements implements SensorSystemInterface {
     public List<Integer> get_Sensors_ID(int user, String device_id)  
     {
         List<Integer> ret = new ArrayList<>();
+        opdateUser(user);
         if(activeUsers.containsKey(user)) {
-            String userString = user + "";
             try {
                 ret = sensor_Pull_Related_SensorIDs(device_id);
             } catch (SQLException | ClassNotFoundException ex) {
@@ -234,37 +263,21 @@ public class SensorSystemImplements implements SensorSystemInterface {
         return ret;
     }
 
-    /*
-    * Get List of IDs of devices connected to user
-    */
     private List<Integer> get_Devices_ID_p(int user) throws SQLException, ClassNotFoundException 
     {
         List<Integer> ret = new ArrayList<>();
         String userString = user + "";
-        System.out.println(user);
-        System.out.println("ASSEY");
         ret = device_Pull_all_device_ids(userString);
-        System.out.println("butty");
         for (Integer integer : ret) {
             System.out.println("DeviceID 1:" + integer);
         }
-//        List<Device_DAO> devices = device_Pull_All_Devices(user+"");
-//        devices.stream().map((dd) -> dd.id_Device ).forEachOrdered((dvc) -> {
-//            ret.add(dvc);
-//        });
-//        for (int device_id : ret) {
-//            System.out.println(device_id);
-//        }
         return ret;
     }
 
-    
-    /*
-    *   Get all data from a sensor
-    */
     public List<String> get_Sensor_Data(int user, int sensor_id) 
     {
         List<String> ret = new ArrayList<>();
+        opdateUser(user);
         if(activeUsers.containsKey(user)) {
             try {
                 ret = pull_all_data(sensor_id);
@@ -275,15 +288,13 @@ public class SensorSystemImplements implements SensorSystemInterface {
         return ret;
     }
 
-    /*
-    *   Get all data from sensor within Dates
-    */
     public List<String> get_Sensor_Data_Within_Dates(int user, 
                                                     int sensor_id, 
                                                     Date older, 
                                                     Date newer) 
     {
         List<String> ret = new ArrayList<>();
+        opdateUser(user);
         if(activeUsers.containsKey(user)) {
             try {
 
