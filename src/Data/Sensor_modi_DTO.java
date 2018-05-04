@@ -221,7 +221,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String sensor_Change_Name(String sensor_name) throws SQLException, ClassNotFoundException {
+    public static String sensor_Change_Name(String sensor_name, int sensor_id) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -229,11 +229,12 @@ public class Sensor_modi_DTO {
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO sensor (NAME) VALUES (?)";
+            String query = "UPDATE sensor SET NAME = ? WHERE ID_SENSOR = ?";
 
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, sensor_name);
+            preparedStmt.setInt(2, sensor_id);
             // execute the preparedstatement
             preparedStmt.execute();
 

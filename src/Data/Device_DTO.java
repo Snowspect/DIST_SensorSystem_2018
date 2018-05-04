@@ -156,14 +156,12 @@ public class Device_DTO
     
     public static String device_Delete_Device(int device_ID) throws SQLException, ClassNotFoundException
     {
-        
-        //TODO FIX SO THAT IT DELETES A DEVICE
         try {
             // create a mysql database connection
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
-            String query = "DELETE WHERE ID_DEVICE = ?";
+            String query = "DELETE FROM device WHERE ID_DEVICE = ?";
 
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setInt(1, device_ID);

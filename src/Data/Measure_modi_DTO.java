@@ -26,7 +26,7 @@ public class Measure_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String change_sensor_ref(String sensor_id_ref) throws SQLException, ClassNotFoundException
+    public static String change_sensor_ref(int sensor_id_ref, int measurement_id) throws SQLException, ClassNotFoundException
     {
         //try to connect to jdbc and create user
         try {
@@ -34,11 +34,12 @@ public class Measure_modi_DTO {
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO measurement (ID_SENSOR_REF) VALUES (?)";
-
+            String query = "UPDATE measurement SET ID_SENSOR_REF = ? WHERE ID_MEASUREMENT = ?";
+            
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString(1, sensor_id_ref);
+            preparedStmt.setInt(1, sensor_id_ref);
+            preparedStmt.setInt(2, measurement_id);
             // execute the preparedstatement
             preparedStmt.execute();
 

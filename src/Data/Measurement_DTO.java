@@ -82,22 +82,6 @@ public class Measurement_DTO {
 
             ResultSet rs = preparedStmt.executeQuery();
             
-            /**
-             * if the current implementation doesn't work, switch to:
-             * ResultSetMetaData metadata = rs.getMetaData();
-             * int columnCount = metadata.getColumnCont();
-             * 
-             * while(rs.next())
-             * {
-             * String row = "";
-             * for (int i = 1; i <= columnCount; i++)
-             * {
-             * row += rs.getString(i) + ", ";
-             * }
-             * tmp.add(row);
-             * }
-             */
-            
             while (rs.next()) {
                 tmp.add(rs.getString("DATA"));
             }

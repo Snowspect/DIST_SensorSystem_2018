@@ -36,8 +36,7 @@ public class Device_modi_DTO {
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO device (OWNER) VALUES (?) WHERE ID_DEVICE = ?";
-
+            String query = "UPDATE device SET OWNER = ? WHERE ID_DEVICE = ?";
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, owner);
@@ -109,7 +108,7 @@ public class Device_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public static String device_Change_Name(String device_name) throws SQLException, ClassNotFoundException {
+    public static String device_Change_Name(String device_name, int device_id) throws SQLException, ClassNotFoundException {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
@@ -121,6 +120,7 @@ public class Device_modi_DTO {
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, device_name);
+            preparedStmt.setInt(2, device_id);
             // execute the preparedstatement
             preparedStmt.execute();
 
@@ -142,6 +142,7 @@ public class Device_modi_DTO {
 
     /**
      * pulls deviceID
+     * Not neccesary but could be implemented.
      */
     public static int device_Pull_DeviceID(String device_Name) throws SQLException, ClassNotFoundException {
         int tmp = 0;
@@ -199,7 +200,7 @@ public class Device_modi_DTO {
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
-            String query = "SELECT ID_DEVICE FROM device WHERE NAME = ?";
+            String query = "SELECT OWNER FROM device WHERE ID_DEVICE = ?";
 
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setInt(1, device_ID);
@@ -222,24 +223,16 @@ public class Device_modi_DTO {
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
             String query = "SELECT ID_DEVICE FROM device WHERE OWNER = ?";
-            //String query = "SELECT ID_SENSOR FROM sensor WHERE ID_DEVICE_REF = ?";
 
-            System.out.println("AFTER QUERY");
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, owner); //owner
 
-            System.out.println("BEFORE RESULSET");
             ResultSet rs = preparedStmt.executeQuery();
 
-            System.out.println("JUST BEFORE RS");
             while (rs.next()) {
                 tmp.add(rs.getInt("ID_DEVICE"));
             }
-            System.out.println("AFTER RS");
-            for (Integer inte : tmp) {
-                System.out.println(inte);
-            }
-            System.out.println("AFTER FIRST PRINT");
+
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("database error");
         }
