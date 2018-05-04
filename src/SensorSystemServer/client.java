@@ -30,7 +30,5 @@ public class client {
               
         int id = s.login("s164916", "FEDpik");
         System.out.println("id: " + id);
-        String str = s.create_Device(42, "COOCK");
-        System.out.println(str);
     }   
 }

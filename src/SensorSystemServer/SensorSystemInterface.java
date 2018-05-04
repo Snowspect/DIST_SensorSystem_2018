@@ -5,9 +5,7 @@
  */
 package SensorSystemServer;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
@@ -18,12 +16,19 @@ import javax.jws.WebService;
  * @author Bruger
  */
 public interface SensorSystemInterface {
+    
+    
+    /*
+    * validates toke
+    */
+    @WebMethod public int validToken(int token);
+    
     /*
     *   User login
     *   @param user     -- username
     *   @param password -- password 
     */
-    @WebMethod public int login(String user, String password);
+    @WebMethod public int login(String username, String password);
     
     /*
     *   Create Sensor
@@ -33,7 +38,7 @@ public interface SensorSystemInterface {
     *   @param sensorType   -- Type, Either put ANALOG or DIGITAL
     *   @param pin          -- pin number
     */
-    @WebMethod public String create_Sensor(int user, 
+    @WebMethod public String create_Sensor(int token, 
                                     String name, 
                                     int id_device, 
                                     String sensorType, 
@@ -44,7 +49,7 @@ public interface SensorSystemInterface {
     *   @param user -- user id
     *   @param name -- Device name
     */    
-    @WebMethod public String create_Device(int user, String name);
+    @WebMethod public String create_Device(int token, String name, int external_id, String owner);
     
     /*
     *   Change Sensor info, pull sensor info and the change what need and use 
@@ -56,7 +61,7 @@ public interface SensorSystemInterface {
     *   @param pin              -- Change pin
     *   @param name             -- Change name
     */
-    @WebMethod public String set_Sensor_Info(int user,
+    @WebMethod public String set_Sensor_Info(int token,
                                             int sensor_id, 
                                             int device_id_ref, 
                                             int type, 
@@ -73,7 +78,7 @@ public interface SensorSystemInterface {
     *   @param pin              -- Change pin
     *   @param name             -- Change name
     */
-    @WebMethod public String set_Device_Info(int user,
+    @WebMethod public String set_Device_Info(int token,
                                             int device_id, 
                                             String owner, 
                                             String name);
@@ -83,29 +88,29 @@ public interface SensorSystemInterface {
     *   @param user             -- user id
     *   @param sensor_id        -- id of the sensor
     */ 
-    @WebMethod public String [] get_Sensor_Info(int user, int sensor_id);
+    @WebMethod public String [] get_Sensor_Info(int token, int sensor_id);
     
     /*
     *   Get device info
     *   @param user             -- user id
     *   @param device_id        -- id of the device
     */ 
-    @WebMethod public String [] get_Device_Info(int user, int device_id);
+    @WebMethod public String [] get_Device_Info(int token, int device_id);
     
-    @WebMethod public int [] get_Devices_ID(int user);
+    @WebMethod public int [] get_Devices_ID(int token, String owner);
     
-    @WebMethod public int [] get_Sensors_ID(int user, int device_id);
+    @WebMethod public int [] get_Sensors_ID(int token, int device_id);
     
     /*
     *   Get all IDs owned by user
     *   @param user --user id
     */
-    @WebMethod public ArrayList<ArrayList<Integer>> get_ids(int user);
+    @WebMethod public String [] get_ids(int token, String owner);
     
-    @WebMethod public String [] get_Sensor_Data(int user, int sensor_id);
+    @WebMethod public String [] get_Sensor_Data(int token, int sensor_id);
     
     @WebMethod public String [] get_Sensor_Data_Within_Dates(
-                                            int user,
+                                            int token,
                                             int sensor_id, 
                                             Date older, 
                                             Date newer); 

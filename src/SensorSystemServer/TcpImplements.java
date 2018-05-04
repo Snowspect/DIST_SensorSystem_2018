@@ -30,7 +30,6 @@ public class TcpImplements implements TcpInterface{
         Timestamp tp = new Timestamp(d.getTime());
         
         try {
-            System.out.println("HALLO MAN");
             createMeasurement(sensor_ID, data ,tp);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
@@ -42,15 +41,17 @@ public class TcpImplements implements TcpInterface{
         String[] al = new String[0];
         try {
             lt = sensor_Pull_Sensor(sensor_id);
+            if(lt.isEmpty()) return null;
             al = new String[lt.size()];
             
             for (int i = 0; i < lt.size(); i++) {
                 al[i] = lt.get(i);
             }
+            if (al.length == 0) return null;
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-
         return al;
     }
     
@@ -58,14 +59,17 @@ public class TcpImplements implements TcpInterface{
          int [] ret = new int [0];
         try {
             ArrayList<Integer> tmp = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs(device_id);
+            if(tmp.isEmpty()) return null;
             ret = new int [tmp.size()];
             for (int i = 0; i < tmp.size(); i++) 
             {
                 ret[i] = tmp.get(i);
             }
+            if(ret.length == 0) return null;
             
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
         return ret;
     }

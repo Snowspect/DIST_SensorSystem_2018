@@ -14,8 +14,8 @@ import java.sql.SQLException;
  *
  * @author tooth
  */
-public class DB_DTO_buildstone {
-
+//public class DB_DTO_buildstone {
+/*
     public static String createX(String y, String x) throws SQLException, ClassNotFoundException //get question from database
     {
         //try to connect to jdbc and create user
@@ -57,4 +57,4 @@ public class DB_DTO_buildstone {
  * CREATE METHODS TO PULL DATA IN GENERAL FOR NEEDED ITEMS.
  * 
  * CREATE METHOD THAT CREATES A DATE OBJECT to be transfered to different SQL tables.
- */
+*/ 
