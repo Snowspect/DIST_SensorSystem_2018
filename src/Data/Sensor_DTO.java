@@ -121,7 +121,7 @@ public class Sensor_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String[] sensor_Pull_All_Sensors(String device_ID_Ref) throws SQLException, ClassNotFoundException
+    public static String[] sensor_Pull_All_Sensors(int device_ID_Ref) throws SQLException, ClassNotFoundException
     {
         ArrayList<Sensor_DAO> tmp = new ArrayList<>();
         String[] x = null;
@@ -132,7 +132,7 @@ public class Sensor_DTO {
             String query = "SELECT * FROM sensor WHERE ID_DEVICE_REF = ?";
 
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString(1, device_ID_Ref);
+            preparedStmt.setInt(1, device_ID_Ref);
 
             ResultSet rs = preparedStmt.executeQuery();
             
