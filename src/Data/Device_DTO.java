@@ -116,8 +116,9 @@ public class Device_DTO
         return tmp;
     }
     
-    public static List<Device_DAO> device_Pull_All_Devices(String device_owner) throws SQLException, ClassNotFoundException
+    public static String[] device_Pull_All_Devices(String device_owner) throws SQLException, ClassNotFoundException
     {
+        String[] x = null;
         ArrayList<Device_DAO> tmp = new ArrayList<>();
         try {
             // create a mysql database connection
@@ -130,35 +131,27 @@ public class Device_DTO
 
             ResultSet rs = preparedStmt.executeQuery();
             
-            /**
-             * if the current implementation doesn't work, switch to:
-             * ResultSetMetaData metadata = rs.getMetaData();
-             * int columnCount = metadata.getColumnCont();
-             * 
-             * while(rs.next())
-             * {
-             * String row = "";
-             * for (int i = 1; i <= columnCount; i++)
-             * {
-             * row += rs.getString(i) + ", ";
-             * }
-             * tmp.add(row);
-             * }
-             */
-            
             while (rs.next()) {
                 Device_DAO tx = new Device_DAO();
                 tx.id_Device = rs.getInt("ID_DEVICE");
+                tx.external_id = rs.getInt("EXTERNAL_ID");
                 tx.created_Date = rs.getString("CREATED_DATE");
                 tx.device_Name = rs.getString("NAME");
                 tx.device_Owner = rs.getString("OWNER");
                 tx.last_Active_Date = rs.getString("LASTACTIVE_DATE");
                 tmp.add(tx);
             }
+            //converts DAO array to string array
+            x = new String[tmp.size()];
+            int i = 0;
+            for (Device_DAO device_DAO : tmp) {
+                x[i] = device_DAO.toString();
+                i++;
+            }
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("database error");
         }
-        return tmp;
+        return x;
     }   
     
     public static String device_Delete_Device(int device_ID) throws SQLException, ClassNotFoundException
@@ -170,7 +163,7 @@ public class Device_DTO
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
-            String query = " WHERE ID_DEVICE = ?";
+            String query = "DELETE WHERE ID_DEVICE = ?";
 
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setInt(1, device_ID);

@@ -11,9 +11,9 @@ package Data;
  */
 public class Device_DAO {
     public int id_Device = 0;
+    public int external_id = 0;
     public String device_Name = "john doe";
     public String device_Owner = "john doe 2";
     public String last_Active_Date = "";
     public String created_Date = "";
-    
 }
