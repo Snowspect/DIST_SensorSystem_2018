@@ -18,8 +18,8 @@ import javax.jws.WebService;
 public interface TcpInterface {
     
     @WebMethod public void oploadData( int sensorID, int data );
-    @WebMethod public List<String> get_Sensor_Info(int sensor_id);
+    @WebMethod public String [] get_Sensor_Info(int sensor_id);
     @WebMethod public void sensorConf( int sensor_Type, int pin_Num, int sensor_ID);
-    @WebMethod public ArrayList<Integer> get_Device_Sensors(int device_id);
+    @WebMethod public int [] get_Device_Sensors(int device_id);
     
 }

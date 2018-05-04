@@ -194,41 +194,55 @@ public class SensorSystemImplements implements SensorSystemInterface {
         return status;
     }
 
-    public List<String> get_Sensor_Info(int user, int sensor_id) 
+    public String[] get_Sensor_Info(int user, int sensor_id) 
     {
-        List<String> lt = new ArrayList<>();
+        String[] ret = new String[0];
         opdateUser(user);
+        
         if (activeUsers.containsKey(user)) {
-            try {
-                lt = sensor_Pull_Sensor(sensor_id);
+            try 
+            {
+                List<String> lt = sensor_Pull_Sensor(sensor_id);
+                ret = new String[lt.size() ];
+                for (int i = 0; i < lt.size(); i++) {
+                    ret[i] = lt.get(i);
+                }
+                
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return lt;
+        return ret;
     }
 
-    public List<String> get_Device_Info(int user, int device_id) 
+    public String [] get_Device_Info(int user, int device_id) 
     {
-        List<String> lt = new ArrayList<>();
+        String[] ret = new String[0];
+
         opdateUser(user);
         if(activeUsers.containsKey(user)) {
             try {
-                lt = device_Pull_Device(device_id);
+                List<String> lt = device_Pull_Device(device_id);
+                ret = new String[lt.size()];
+                
+                for (int  i = 0;  i < lt.size();  i++) {
+                    ret[i] = lt.get(i);
+                }
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return lt;
+        return ret;
     }
         
-    public ArrayList<ArrayList<Integer>> get_ids(int user)
+    public String [] get_ids(int user)
     {
+        String[] ret = new String[0];
         ArrayList<ArrayList<Integer>> related_sensor_id = new ArrayList<>();   
         opdateUser(user);
         if(activeUsers.containsKey(user)) {
             try {
-                List<Integer> devices_id = get_Devices_ID_p(user);
+                int[] devices_id = get_Devices_ID_p(user);
                 for(Integer i : devices_id)  
                 {   
                     //each device returns a list of integer id's. each list is added to a list of integer lists called related_sensor_id
@@ -239,27 +253,41 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return  related_sensor_id;
+        return  ret;
     }
 
-    public List<Integer> get_Devices_ID(int user)  
+    public int[] get_Devices_ID(int user)  
     {
-        List<Integer> ret = new ArrayList<>();
+        int[] ret = new int[0];
         opdateUser(user);
         if(activeUsers.containsKey(user)) {
             String userString = user + "";
-            ret = device_Pull_all_device_ids(userString);
+            List<Integer> lt = device_Pull_all_device_ids(userString);
+            
+            ret = new int [lt.size()];
+                
+            for (int  i = 0;  i < lt.size();  i++) {
+                ret[i] = lt.get(i);
+            }
+            
         }
         return ret;
     }
     
-    public List<Integer> get_Sensors_ID(int user, int device_id)  
+    public int [] get_Sensors_ID(int user, int device_id)  
     {
-        List<Integer> ret = new ArrayList<>();
+        int [] ret = new int[0];
         opdateUser(user);
         if(activeUsers.containsKey(user)) {
             try {
-                ret = sensor_Pull_Related_SensorIDs(device_id);
+                List<Integer> lt = sensor_Pull_Related_SensorIDs(device_id);
+                
+                ret = new int [lt.size()];
+
+                for (int  i = 0;  i < lt.size();  i++) {
+                    ret[i] = lt.get(i);
+                }
+                
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -267,24 +295,35 @@ public class SensorSystemImplements implements SensorSystemInterface {
         return ret;
     }
 
-    private List<Integer> get_Devices_ID_p(int user) throws SQLException, ClassNotFoundException 
+    private int[] get_Devices_ID_p(int user) throws SQLException, ClassNotFoundException 
     {
-        List<Integer> ret = new ArrayList<>();
+        
         String userString = user + "";
-        ret = device_Pull_all_device_ids(userString);
+        List<Integer> lt = device_Pull_all_device_ids(userString);
+        int[] ret = new int [lt.size()];
+        
+        for (int  i = 0;  i < lt.size();  i++) {
+            ret[i] = lt.get(i);
+        }
+        
         for (Integer integer : ret) {
             System.out.println("DeviceID 1:" + integer);
         }
         return ret;
     }
 
-    public List<String> get_Sensor_Data(int user, int sensor_id) 
+    public String[] get_Sensor_Data(int user, int sensor_id) 
     {
-        List<String> ret = new ArrayList<>();
+        String[] ret = new String [0];
         opdateUser(user);
         if(activeUsers.containsKey(user)) {
             try {
-                ret = pull_all_data(sensor_id);
+                List<String> lt = pull_all_data(sensor_id);
+                ret = new String [lt.size()];
+        
+                for (int  i = 0;  i < lt.size();  i++) {
+                    ret[i] = lt.get(i);
+                }
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -292,17 +331,23 @@ public class SensorSystemImplements implements SensorSystemInterface {
         return ret;
     }
 
-    public List<String> get_Sensor_Data_Within_Dates(int user, 
+    public String[] get_Sensor_Data_Within_Dates(int user, 
                                                     int sensor_id, 
                                                     Date older, 
                                                     Date newer) 
     {
-        List<String> ret = new ArrayList<>();
+        String[] ret = new String [0];
+        
         opdateUser(user);
         if(activeUsers.containsKey(user)) {
             try {
 
-                ret = pull_data_within_dates(older.getTime(), newer.getTime(), sensor_id);
+                List<String> lt = pull_data_within_dates(older.getTime(), newer.getTime(), sensor_id);
+                ret = new String [lt.size()];
+        
+                for (int  i = 0;  i < lt.size();  i++) {
+                    ret[i] = lt.get(i);
+                }
 
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);

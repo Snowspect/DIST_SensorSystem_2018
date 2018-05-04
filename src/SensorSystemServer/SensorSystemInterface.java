@@ -83,18 +83,18 @@ public interface SensorSystemInterface {
     *   @param user             -- user id
     *   @param sensor_id        -- id of the sensor
     */ 
-    @WebMethod public List<String> get_Sensor_Info(int user, int sensor_id);
+    @WebMethod public String [] get_Sensor_Info(int user, int sensor_id);
     
     /*
     *   Get device info
     *   @param user             -- user id
     *   @param device_id        -- id of the device
     */ 
-    @WebMethod public List<String> get_Device_Info(int user, int device_id);
+    @WebMethod public String [] get_Device_Info(int user, int device_id);
     
-    @WebMethod public List<Integer> get_Devices_ID(int user);
+    @WebMethod public int [] get_Devices_ID(int user);
     
-    @WebMethod public List<Integer> get_Sensors_ID(int user, int device_id);
+    @WebMethod public int [] get_Sensors_ID(int user, int device_id);
     
     /*
     *   Get all IDs owned by user
@@ -102,9 +102,9 @@ public interface SensorSystemInterface {
     */
     @WebMethod public ArrayList<ArrayList<Integer>> get_ids(int user);
     
-    @WebMethod public List<String> get_Sensor_Data(int user, int sensor_id);
+    @WebMethod public String [] get_Sensor_Data(int user, int sensor_id);
     
-    @WebMethod public List<String> get_Sensor_Data_Within_Dates(
+    @WebMethod public String [] get_Sensor_Data_Within_Dates(
                                             int user,
                                             int sensor_id, 
                                             Date older, 

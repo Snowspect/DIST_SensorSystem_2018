@@ -22,7 +22,7 @@ public class tcpClient {
     public static void main(String[] arg) throws Exception
     {
 
-        URL url = new URL("http://178.62.85.246:9902/SensorTcpService?wsdl");
+        URL url = new URL("http://165.227.232.158:9902/SensorTcpService?wsdl");
         QName qname = new QName("http://SensorSystemServer/", "TcpImplementsService");
         Service service = Service.create(url, qname);
         TcpInterface s = service.getPort(TcpInterface.class);

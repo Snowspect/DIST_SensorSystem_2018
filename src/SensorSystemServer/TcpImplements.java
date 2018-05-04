@@ -6,7 +6,6 @@
 package SensorSystemServer;
 
 import static Data.Measurement_DTO.createMeasurement;
-import Data.Sensor_DAO;
 import static Data.Sensor_DTO.sensor_Pull_Sensor;
 import Data.Sensor_modi_DTO;
 import static Data.Sensor_modi_DTO.sensor_Pull_Related_SensorIDs;
@@ -37,22 +36,34 @@ public class TcpImplements implements TcpInterface{
             Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public List<String> get_Sensor_Info(int sensor_id) 
+    public String [] get_Sensor_Info(int sensor_id) 
     {
         List<String> lt = new ArrayList<>();
+        String[] al = new String[0];
         try {
             lt = sensor_Pull_Sensor(sensor_id);
+            al = new String[lt.size()];
+            
+            for (int i = 0; i < lt.size(); i++) {
+                al[i] = lt.get(i);
+            }
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return lt;
+        return al;
     }
     
-    public ArrayList<Integer> get_Device_Sensors(int device_id){
-        ArrayList<Integer> ret = new ArrayList<>();
+    public int [] get_Device_Sensors(int device_id){
+         int [] ret = new int [0];
         try {
-            ret = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs(device_id);
+            ArrayList<Integer> tmp = (ArrayList<Integer>) sensor_Pull_Related_SensorIDs(device_id);
+            ret = new int [tmp.size()];
+            for (int i = 0; i < tmp.size(); i++) 
+            {
+                ret[i] = tmp.get(i);
+            }
+            
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
         }

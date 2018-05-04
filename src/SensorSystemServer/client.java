@@ -22,19 +22,15 @@ public class client {
      */
     public static void main(String[] arg) throws Exception
     {
-
         Scanner reader = new Scanner(System.in);
         URL url = new URL("http://178.62.85.246:9901/SensorSystemService?wsdl");
         QName qname = new QName("http://SensorSystemServer/", "SensorSystemImplementsService");
         Service service = Service.create(url, qname);
         SensorSystemInterface s = service.getPort(SensorSystemInterface.class);
-
-        System.out.println("111");
-        
+              
         int id = s.login("s164916", "FEDpik");
-        System.out.println("f you");
+        System.out.println("id: " + id);
         String str = s.create_Device(42, "COOCK");
         System.out.println(str);
-    }
-    
+    }   
 }
