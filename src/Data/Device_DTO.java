@@ -104,6 +104,7 @@ public class Device_DTO
             
             while (rs.next()) {
                 tmp.add(rs.getInt("ID_DEVICE") + "");
+                tmp.add(rs.getInt("EXTERNAL_ID") + "");
                 tmp.add(rs.getString("NAME"));
                 tmp.add(rs.getString("OWNER"));
                 tmp.add(rs.getString("LASTACTIVE_DATE"));
