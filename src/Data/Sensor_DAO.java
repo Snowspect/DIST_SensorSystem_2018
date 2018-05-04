@@ -18,17 +18,4 @@ public class Sensor_DAO {
     String created_Date = "";
     String lastActive_Date = "";
     int updateTime_Minutes = 0;
-    
-    public String toString(){
-        String ret = "ID:" + this.sensor_ID +
-                    "_DRID:" + this.device_Ref_ID +
-                    "_NAME:" + this.name +
-                    "_TYPE:" + this.sensorType +
-                    "_PIN:" + this.pin +
-                    "_LAD:" + this.lastActive_Date +
-                    "_CD:" + this.created_Date +
-                    "_UTM" + this.updateTime_Minutes +
-                    "!";
-        return ret;
-    }
 }

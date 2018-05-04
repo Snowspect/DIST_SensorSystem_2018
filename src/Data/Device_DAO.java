@@ -16,13 +16,4 @@ public class Device_DAO {
     public String last_Active_Date = "";
     public String created_Date = "";
     
-    public String toString(){
-        String ret = "ID:" + this.id_Device +
-                    "_NAME:" + this.device_Name +
-                    "_OWNER:" + this.device_Owner +
-                    "_LAD:" + this.last_Active_Date +
-                    "_CD:" + this.created_Date +
-                    "!";
-        return ret;
-    }
 }
