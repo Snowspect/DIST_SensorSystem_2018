@@ -23,6 +23,7 @@ public class ServerMain {
         Endpoint.publish(address1, SSImpl);
         Endpoint.publish(address2, tcpImpl);
         System.out.println("Starting server service..");
+
     }
     
 }

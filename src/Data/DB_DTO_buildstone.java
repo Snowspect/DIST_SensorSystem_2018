@@ -21,13 +21,6 @@ public class DB_DTO_buildstone {
         //try to connect to jdbc and create user
         try {
             // create a mysql database connection
-            Class.forName(Conn.DRIVER); //Conn is our connection file
-            Connection conn = DriverManager.getConnection //Connection is a built in SQL class
-                    (
-                            Conn.DATABASE,
-                            Conn.USER,
-                            Conn.PASS
-                    );
             // the mysql insert statement, adding a person into person table
             String query = "INSERT INTO x (y,x....) VALUES (?,?..)";
 

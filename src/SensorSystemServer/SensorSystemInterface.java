@@ -94,7 +94,7 @@ public interface SensorSystemInterface {
     
     @WebMethod public List<Integer> get_Devices_ID(int user);
     
-    @WebMethod public List<Integer> get_Sensors_ID(int user, String device_id);
+    @WebMethod public List<Integer> get_Sensors_ID(int user, int device_id);
     
     /*
     *   Get all IDs owned by user

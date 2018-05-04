@@ -256,7 +256,7 @@ public class Sensor_modi_DTO {
      /**
      * pulls all related sensors to a device
      */
-    public static List<Integer> sensor_Pull_Related_SensorIDs(String device_ID_ref) throws SQLException, ClassNotFoundException
+    public static List<Integer> sensor_Pull_Related_SensorIDs(int device_ID_ref) throws SQLException, ClassNotFoundException
     {
         ArrayList<Integer> tmp = new ArrayList<>();
         try {
@@ -267,19 +267,14 @@ public class Sensor_modi_DTO {
 
             System.out.println("AFTER QUERY");
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString(1, device_ID_ref); //owner
+            preparedStmt.setInt(1, device_ID_ref);
 
             System.out.println("BEFORE RESULSET");
             ResultSet rs = preparedStmt.executeQuery();
 
             System.out.println("JUST BEFORE RS");
             while (rs.next()) {
-                tmp.add(rs.getInt("ID_DEVICE"));
-            }
-            
-            System.out.println("AFTER RS");
-            for (Integer inte : tmp) {
-                System.out.println(inte);
+                tmp.add(rs.getInt("ID_SENSOR"));
             }
             
         } catch (ClassNotFoundException | SQLException e) {
