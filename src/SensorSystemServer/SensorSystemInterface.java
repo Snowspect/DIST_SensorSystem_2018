@@ -21,7 +21,7 @@ public interface SensorSystemInterface {
     /*
     * validates toke
     */
-    @WebMethod public int validToken(int token);
+    @WebMethod public int validatToken(int token);
     
     /*
     *   User login

@@ -42,17 +42,21 @@ public class SensorSystemImplements implements SensorSystemInterface {
     private HashMap<Integer, Bruger> activeUsers;
     private HashMap<Bruger, Date> lastActive;
 
-    private void opdateUser(int token) {
+    private void opdateToken(int token) {
+        if(activeUsers.containsKey(token)){
+            System.out.println("hey");
+            Bruger b = activeUsers.get(token);
+            Date currentTime = new Date();
+            Date lastRequestTime = lastActive.get(b);
 
-        Bruger b = activeUsers.get(token);
-        Date currentTime = new Date();
-        Date lastRequestTime = lastActive.get(b);
-
-        if (lastRequestTime.getTime() + 300000 < currentTime.getTime()) {
-            lastActive.replace(b, lastRequestTime, currentTime);
-        } else {
-            lastActive.remove(b);
-            activeUsers.remove(token);
+            if (lastRequestTime.getTime() + 300000 > currentTime.getTime()) {
+                lastActive.replace(b, lastRequestTime, currentTime);
+                System.out.println("hey2");
+            } else {
+                System.out.println("hey3");
+                lastActive.remove(b);
+                activeUsers.remove(token);
+            }
         }
     }
     
@@ -86,8 +90,8 @@ public class SensorSystemImplements implements SensorSystemInterface {
     }
 
     
-    public int validToken(int token) {
-        opdateUser(token);
+    public int validatToken(int token) {
+        opdateToken(token);
         if (activeUsers.containsKey(token)) {
             return token;
         } else {
@@ -112,7 +116,8 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 id_code = sr.nextInt();
                 System.out.println(id_code);
             } while (activeUsers.containsValue(id_code) || id_code == 0);
-
+            
+            b.campusnetId = username;
             activeUsers.put(id_code, b);
             lastActive.put(b, new Date());
             return id_code;
@@ -130,15 +135,15 @@ public class SensorSystemImplements implements SensorSystemInterface {
             String pin) {
         String ret = "";
         try {
-            opdateUser(token);
+            opdateToken(token);
             if (activeUsers.containsKey(token)) {
                 String[] s = get_Device_Info(token, id_device);
-                if (activeUsers.get(token).brugernavn.equals(s[3])) {
+                if (activeUsers.get(token).campusnetId.equals(s[3])) {
                     Date dt = new Date();
                     Timestamp dx = new Timestamp(dt.getTime());
                     ret = sensor_CreateSensor(name, id_device, sensorType, pin, dx, dx, "4");
                 } else {
-                    System.out.println(activeUsers.get(token).brugernavn + " !=" + s[3]);
+                    System.out.println(activeUsers.get(token).campusnetId + " !=" + s[3]);
                     return null;
                 }
             } else {
@@ -154,9 +159,10 @@ public class SensorSystemImplements implements SensorSystemInterface {
 
     public String create_Device(int token, String name, int external_id, String owner) {
         String ret = "";
-        opdateUser(token);
+        opdateToken(token);
         if (activeUsers.containsKey(token)) {
-            if (activeUsers.get(token).brugernavn.equals(owner)) {
+            String id = activeUsers.get(token).campusnetId;
+            if ( id.equals(owner)) {
                 try {
                     Date dt = new Date();
                     Timestamp dx = new Timestamp(dt.getTime());
@@ -167,7 +173,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                     return null;
                 }
             } else {
-                System.out.println(activeUsers.get(token).brugernavn + " !=" + owner);
+                System.out.println(id + " !=" + owner);
                 return null;
             }
         } else {
@@ -185,10 +191,10 @@ public class SensorSystemImplements implements SensorSystemInterface {
             int pin,
             String name) {
         String status = "";
-        opdateUser(token);
+        opdateToken(token);
         if (activeUsers.containsKey(token)) {
             String[] s = get_Device_Info(token, device_id_ref);
-            if (activeUsers.get(token).brugernavn.equals(s[3])) {
+            if (activeUsers.get(token).campusnetId.equals(s[3])) {
                 try {
                     //Change device its connected to
                     String dir = device_id_ref + "";
@@ -218,7 +224,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                     return null;
                 }
             } else {
-                System.out.println(activeUsers.get(token).brugernavn + " !=" + s[3]);
+                System.out.println(activeUsers.get(token).campusnetId + " !=" + s[3]);
                 return null;
             }
         } else {
@@ -233,9 +239,9 @@ public class SensorSystemImplements implements SensorSystemInterface {
             String owner,
             String name) {
         String status = "";
-        opdateUser(token);
+        opdateToken(token);
         if (activeUsers.containsKey(token)) {
-            if (activeUsers.get(token).brugernavn.equals(owner)) {
+            if (activeUsers.get(token).campusnetId.equals(owner)) {
                 try {
                     String tmp = device_Change_Owner(owner, 2);
                     status = "Owner: " + tmp;
@@ -246,7 +252,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                     return null;
                 }
             } else {
-                System.out.println(activeUsers.get(token).brugernavn + " !=" + owner);
+                System.out.println(activeUsers.get(token).campusnetId + " !=" + owner);
                 return null;
             }
         } else {
@@ -258,16 +264,16 @@ public class SensorSystemImplements implements SensorSystemInterface {
     
     public String[] get_Sensor_Info(int token, int sensor_id) {
         String[] ret = new String[0];
-        opdateUser(token);
+        opdateToken(token);
 
         if (activeUsers.containsKey(token)) 
         {
             try {
                 List<String> lt = sensor_Pull_Sensor(sensor_id);
                 String[] sA = get_Device_Info(token, Integer.parseInt(lt.get(2)) );
-                if( !(sA[3].equals( activeUsers.get(token).brugernavn )) )
+                if( !(sA[3].equals( activeUsers.get(token).campusnetId )) )
                 {
-                    System.out.println(activeUsers.get(token).brugernavn + " !=" + sA[3]);
+                    System.out.println(activeUsers.get(token).campusnetId + " !=" + sA[3]);
                     return null;
                 }
                 ret = new String[lt.size()];
@@ -289,12 +295,12 @@ public class SensorSystemImplements implements SensorSystemInterface {
     public String[] get_Device_Info(int token, int device_id) {
         String[] ret = new String[0];
 
-        opdateUser(token);
+        opdateToken(token);
         if ( activeUsers.containsKey(token) ) {
             try {
                 List<String> lt = device_Pull_Device(device_id);
-                if( !(lt.get(3).equals( activeUsers.get(token).brugernavn )) ){
-                    System.out.println(activeUsers.get(token).brugernavn + " !=" + lt.get(3));
+                if( !(lt.get(3).equals( activeUsers.get(token).campusnetId )) ){
+                    System.out.println(activeUsers.get(token).campusnetId + " !=" + lt.get(3));
                     return null;
                 }
                 
@@ -318,10 +324,10 @@ public class SensorSystemImplements implements SensorSystemInterface {
     public String[] get_ids(int token, String owner) {
         String[] ret = new String[0];
         ArrayList<ArrayList<Integer>> related_sensor_id = new ArrayList<>();
-        opdateUser(token);
+        opdateToken(token);
         if (activeUsers.containsKey(token)) 
         {   
-            if(activeUsers.get(token).brugernavn.equals(owner))
+            if(activeUsers.get(token).campusnetId.equals(owner))
             {
                 try {
                     int[] devices_id = get_Devices_ID_p(owner);
@@ -336,7 +342,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 }
             }
             else {
-                System.out.println(activeUsers.get(token).brugernavn + " !=" + owner);
+                System.out.println(activeUsers.get(token).campusnetId + " !=" + owner);
                 return null;
             }
         }
@@ -349,9 +355,9 @@ public class SensorSystemImplements implements SensorSystemInterface {
 
     public int[] get_Devices_ID(int token, String owner) {
         int[] ret = new int[0];
-        opdateUser(token);
+        opdateToken(token);
         if (activeUsers.containsKey(token)) {
-            if(activeUsers.get(token).brugernavn.equals(owner)){
+            if(activeUsers.get(token).campusnetId.equals(owner)){
                 List<Integer> lt = device_Pull_all_device_ids(owner);
 
                 ret = new int[lt.size()];
@@ -361,7 +367,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 }
             }
             else{ 
-                System.out.println(activeUsers.get(token).brugernavn + " !=" + owner);
+                System.out.println(activeUsers.get(token).campusnetId + " !=" + owner);
                 return null;
             }   
         }
@@ -374,11 +380,11 @@ public class SensorSystemImplements implements SensorSystemInterface {
 
     public int[] get_Sensors_ID(int token, int device_id) {
         int[] ret = new int[0];
-        opdateUser(token);
+        opdateToken(token);
         if (activeUsers.containsKey(token)) {
             try {
                 String s = get_Device_Owner(device_id);
-                if(activeUsers.get(token).brugernavn.equals( s )){
+                if(activeUsers.get(token).campusnetId.equals( s )){
                     List<Integer> lt = sensor_Pull_Related_SensorIDs(device_id);
 
                     ret = new int[lt.size()];
@@ -388,7 +394,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                     }
                 }
                 else{ 
-                    System.out.println(activeUsers.get(token).brugernavn + " !=" + s);
+                    System.out.println(activeUsers.get(token).campusnetId + " !=" + s);
                     return null;
                 }
             } catch (SQLException | ClassNotFoundException ex) {
@@ -405,10 +411,10 @@ public class SensorSystemImplements implements SensorSystemInterface {
 
     public String[] get_Sensor_Data(int token, int sensor_id) {
         String[] ret = new String[0];
-        opdateUser(token);
+        opdateToken(token);
         if (activeUsers.containsKey(token)) {
             try {
-                String b = activeUsers.get(token).brugernavn;
+                String b = activeUsers.get(token).campusnetId;
                 String o = get_Sensor_Owner(sensor_id);
                 if (b.equals( o ) ) {
                     List<String> lt = pull_all_data(sensor_id);
@@ -440,10 +446,10 @@ public class SensorSystemImplements implements SensorSystemInterface {
             Date newer) {
         String[] ret = new String[0];
 
-        opdateUser(token);
+        opdateToken(token);
         if (activeUsers.containsKey(token)) {
             try {
-                String b = activeUsers.get(token).brugernavn;
+                String b = activeUsers.get(token).campusnetId;
                 String o = get_Sensor_Owner(sensor_id);
                 if (b.equals( o ) ) {
                     List<String> lt = pull_data_within_dates(older.getTime(), newer.getTime(), sensor_id);
