@@ -459,6 +459,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 }
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
             }
         }
         else {
