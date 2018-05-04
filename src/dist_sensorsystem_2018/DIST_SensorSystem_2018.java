@@ -34,9 +34,9 @@ public class DIST_SensorSystem_2018 {
             System.out.println("hellooooo1");
             Date dt = new Date();
             Timestamp dx = new Timestamp(dt.getTime());
-            createMeasurement(3, 323223232, dx);
+            //createMeasurement(3, 323223232, dx);
             //device_CreateDevice(2,"3","42", dx, dx);
-            //sensor_CreateSensor("sensor1", 1, "DIGITAL", "36", dx, dx, "4");
+            sensor_CreateSensor("sensor1", 1, "DIGITAL", "36", dx, dx, "4");
             
 /*            ArrayList<Integer> tmp = device_Pull_all_device_ids("42");
             for (Integer arg : tmp) {

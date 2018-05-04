@@ -11,5 +11,5 @@ package Data;
  */
 public class Conn 
 {
-    static final String CONNECTION_STRING = "jdbc:mariadb://165.227.232.158:3306/sensorsystem?user=Dist&password=*54B7B2B2CAA56DB962B1BD8C9CE7EEE49BB31B2B";
+    static final String CONNECTION_STRING = "jdbc:mariadb://165.227.232.158:3306/sensorsystem?user=Distro&password=*350D98A091DA809E91A1C7F431833AD6E2F32B0C";
 }
