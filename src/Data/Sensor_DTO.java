@@ -129,7 +129,7 @@ public class Sensor_DTO {
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
-            String query = "SELECT * FROM sensor WHERE ID_DEVICE_REF";
+            String query = "SELECT * FROM sensor WHERE ID_DEVICE_REF = ?";
 
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, device_ID_Ref);
