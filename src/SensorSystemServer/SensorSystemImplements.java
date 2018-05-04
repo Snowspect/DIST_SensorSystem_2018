@@ -217,7 +217,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                     status = status + " Pin: " + tmp;
 
                     //Change name
-                    tmp = sensor_Change_Name(name);
+                    tmp = sensor_Change_Name(name, sensor_id);
                     status = status + " Name: " + tmp;
                 } catch (SQLException | ClassNotFoundException ex) {
                     Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
@@ -243,9 +243,9 @@ public class SensorSystemImplements implements SensorSystemInterface {
         if (activeUsers.containsKey(token)) {
             if (activeUsers.get(token).campusnetId.equals(owner)) {
                 try {
-                    String tmp = device_Change_Owner(owner, 2);
+                    String tmp = device_Change_Owner(owner, device_id);
                     status = "Owner: " + tmp;
-                    tmp = device_Change_Name(name);
+                    tmp = device_Change_Name(name, device_id);
                     status = status + " Name: " + tmp;
                 } catch (SQLException | ClassNotFoundException ex) {
                     Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
@@ -270,10 +270,11 @@ public class SensorSystemImplements implements SensorSystemInterface {
         {
             try {
                 List<String> lt = sensor_Pull_Sensor(sensor_id);
-                String[] sA = get_Device_Info(token, Integer.parseInt(lt.get(2)) );
-                if( !(sA[3].equals( activeUsers.get(token).campusnetId )) )
+                String s = get_Device_Owner(Integer.parseInt(lt.get(2)));
+                String c = activeUsers.get(token).campusnetId;
+                if( !( s.equals(c) ) )
                 {
-                    System.out.println(activeUsers.get(token).campusnetId + " !=" + sA[3]);
+                    System.out.println(activeUsers.get(token).campusnetId + " !=" + s);
                     return null;
                 }
                 ret = new String[lt.size()];
@@ -291,6 +292,32 @@ public class SensorSystemImplements implements SensorSystemInterface {
         }
         return ret;
     }
+    
+    public String[] get_All_Sensor_Info(int token, int device_id) {
+        String[] ret;
+        opdateToken(token);
+        if (activeUsers.containsKey(token)) 
+        {
+            String[] sA = get_Device_Info(token, device_id);
+            if( !(sA[3].equals( activeUsers.get(token).campusnetId )) )
+            {
+                System.out.println(activeUsers.get(token).campusnetId + " !=" + sA[3]);
+                return null;
+            }
+            try {
+                 ret = sensor_Pull_All_Sensors(device_id);
+
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        }else {
+            System.out.println("Token: " + token + " not in use");
+            return null;
+        }
+        return ret;
+    }
+    
 
     public String[] get_Device_Info(int token, int device_id) {
         String[] ret = new String[0];
@@ -335,6 +362,13 @@ public class SensorSystemImplements implements SensorSystemInterface {
                         //each device returns a list of integer id's. each list is added to a list of integer lists called related_sensor_id
                         related_sensor_id.add((ArrayList<Integer>) sensor_Pull_Related_SensorIDs(i));
                         //ret.put(i, s);
+                    }
+                    for (int i = 0; i < devices_id.length; i++) {
+                        List<Integer> lt = sensor_Pull_Related_SensorIDs( devices_id[i] );
+                        ret[i] = devices_id[i] + " : ";
+                        for (int j = 0; j < lt.size(); j++) {
+                            ret[i] = ret[i] + "-" + lt.get(j);
+                        }
                     }
                 } catch (SQLException | ClassNotFoundException ex) {
                     Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
