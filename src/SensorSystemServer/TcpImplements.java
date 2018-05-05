@@ -25,6 +25,8 @@ import javax.jws.WebService;
 @WebService(endpointInterface = "SensorSystemServer.TcpInterface")
 public class TcpImplements implements TcpInterface{
     
+    private static final Logger LOGGER = Logger.getLogger( ServerMain.class.getName() );
+    
     public void oploadData(int sensor_ID, int data){
         Date d = new Date();
         Timestamp tp = new Timestamp(d.getTime());
@@ -32,7 +34,7 @@ public class TcpImplements implements TcpInterface{
         try {
             createMeasurement(sensor_ID, data ,tp);
         } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log( Level.SEVERE, ex.toString(), ex );
         }
     }
     public String [] get_Sensor_Info(int sensor_id) 
@@ -49,7 +51,7 @@ public class TcpImplements implements TcpInterface{
             }
             if (al.length == 0) return null;
         } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log( Level.SEVERE, ex.toString(), ex );
             return null;
         }
         return al;
@@ -68,14 +70,13 @@ public class TcpImplements implements TcpInterface{
             if(ret.length == 0) return null;
             
         } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log( Level.SEVERE, ex.toString(), ex );
             return null;
         }
         return ret;
     }
     
     public void sensorConf(int sensor_Type, int pin_Num, int sensor_ID){
-        
         try {
             String t = "";
             String p = pin_Num+"";
@@ -86,7 +87,7 @@ public class TcpImplements implements TcpInterface{
             Sensor_modi_DTO.sensor_Change_Sensortype(t, sensor_ID);
             Sensor_modi_DTO.sensor_Change_Pin(p, sensor_ID);
         } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(TcpImplements.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log( Level.SEVERE, ex.toString(), ex );
         }
     }
 }

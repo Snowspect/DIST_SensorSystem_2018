@@ -45,73 +45,57 @@ public class Device_DTO
          * lastActive/created_date could be a date object, which a mySql database also can hold
          */
         //try to connect to jdbc and create user
-        try
-        {
-            // create a mysql database connection
-            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
-            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
-            // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO device (EXTERNAL_ID,NAME,OWNER,LASTACTIVE_DATE,CREATED_DATE) VALUES (?,?,?,?,?)";
-            
-            // create the mysql insert preparedstatement
-            PreparedStatement preparedStmt = conn.prepareStatement(query);
-            PreparedStatement dw = conn.prepareStatement(query);
-            preparedStmt.setInt(1, external_id);
-            preparedStmt.setString(2, device_name);
-            preparedStmt.setString(3, owner);
-            preparedStmt.setTimestamp(4, lastActive);
-            preparedStmt.setTimestamp(5, created_date);
+        // create a mysql database connection
+        Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+        Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
+        // the mysql insert statement, adding a person into person table
+        String query = "INSERT INTO device (EXTERNAL_ID,NAME,OWNER,LASTACTIVE_DATE,CREATED_DATE) VALUES (?,?,?,?,?)";
+
+        // create the mysql insert preparedstatement
+        PreparedStatement preparedStmt = conn.prepareStatement(query);
+        PreparedStatement dw = conn.prepareStatement(query);
+        preparedStmt.setInt(1, external_id);
+        preparedStmt.setString(2, device_name);
+        preparedStmt.setString(3, owner);
+        preparedStmt.setTimestamp(4, lastActive);
+        preparedStmt.setTimestamp(5, created_date);
 
 
-            // execute the preparedstatement
-            preparedStmt.execute();
-            
-            //close connection
-            conn.close();
+        // execute the preparedstatement
+        preparedStmt.execute();
 
-            //never displayed
-            return "device_created";
-        } catch (SQLException e)
-        {
-			e.printStackTrace();
-            System.err.println("Got an sql exception!");
-            System.err.println(e.getMessage());
-            return e.getMessage();
-        } catch (Exception e)
-        {
-			e.printStackTrace();
-            System.err.println("Got an exception!");
-            System.err.println(e.getMessage());
-            return e.getMessage();
-        }
+        //close connection
+        conn.close();
+
+        //never displayed
+        return "device_created";
+
     }
+        
      /**
      * pulls entire device information based on device ID
      */
     public static List<String> device_Pull_Device(int device_ID) throws SQLException, ClassNotFoundException
     {
         ArrayList<String> tmp = new ArrayList<String>();
-        try {
-            // create a mysql database connection
-            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
-            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
-            String query = "SELECT * FROM device WHERE ID_DEVICE = ?";
+        
+        // create a mysql database connection
+        Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+        Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
+        String query = "SELECT * FROM device WHERE ID_DEVICE = ?";
 
-            PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setInt(1, device_ID);
+        PreparedStatement preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setInt(1, device_ID);
 
-            ResultSet rs = preparedStmt.executeQuery();
-            
-            while (rs.next()) {
-                tmp.add(rs.getInt("ID_DEVICE") + "");
-                tmp.add(rs.getInt("EXTERNAL_ID") + "");
-                tmp.add(rs.getString("NAME"));
-                tmp.add(rs.getString("OWNER"));
-                tmp.add(rs.getString("LASTACTIVE_DATE"));
-                tmp.add(rs.getString("CREATED_DATE"));
-            }
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("database error");
+        ResultSet rs = preparedStmt.executeQuery();
+
+        while (rs.next()) {
+            tmp.add(rs.getInt("ID_DEVICE") + "");
+            tmp.add(rs.getInt("EXTERNAL_ID") + "");
+            tmp.add(rs.getString("NAME"));
+            tmp.add(rs.getString("OWNER"));
+            tmp.add(rs.getString("LASTACTIVE_DATE"));
+            tmp.add(rs.getString("CREATED_DATE"));
         }
         return tmp;
     }
@@ -120,58 +104,52 @@ public class Device_DTO
     {
         String[] x = null;
         ArrayList<Device_DAO> tmp = new ArrayList<>();
-        try {
-            // create a mysql database connection
-            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
-            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
-            String query = "SELECT * FROM device WHERE OWNER = ?";
+        
+        // create a mysql database connection
+        Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+        Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
+        String query = "SELECT * FROM device WHERE OWNER = ?";
 
-            PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString(1, device_owner);
+        PreparedStatement preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, device_owner);
 
-            ResultSet rs = preparedStmt.executeQuery();
-            
-            while (rs.next()) {
-                Device_DAO tx = new Device_DAO();
-                tx.id_Device = rs.getInt("ID_DEVICE");
-                tx.external_id = rs.getInt("EXTERNAL_ID");
-                tx.created_Date = rs.getString("CREATED_DATE");
-                tx.device_Name = rs.getString("NAME");
-                tx.device_Owner = rs.getString("OWNER");
-                tx.last_Active_Date = rs.getString("LASTACTIVE_DATE");
-                tmp.add(tx);
-            }
-            //converts DAO array to string array
-            x = new String[tmp.size()];
-            int i = 0;
-            for (Device_DAO device_DAO : tmp) {
-                x[i] = device_DAO.toString();
-                i++;
-            }
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("database error");
+        ResultSet rs = preparedStmt.executeQuery();
+
+        while (rs.next()) {
+            Device_DAO tx = new Device_DAO();
+            tx.id_Device = rs.getInt("ID_DEVICE");
+            tx.external_id = rs.getInt("EXTERNAL_ID");
+            tx.created_Date = rs.getString("CREATED_DATE");
+            tx.device_Name = rs.getString("NAME");
+            tx.device_Owner = rs.getString("OWNER");
+            tx.last_Active_Date = rs.getString("LASTACTIVE_DATE");
+            tmp.add(tx);
         }
+        //converts DAO array to string array
+        x = new String[tmp.size()];
+        int i = 0;
+        for (Device_DAO device_DAO : tmp) {
+            x[i] = device_DAO.toString();
+            i++;
+        }
+
         return x;
     }   
     
     public static String device_Delete_Device(int device_ID) throws SQLException, ClassNotFoundException
-    {
-        try {
-            // create a mysql database connection
-            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
-            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
+    { 
+        // create a mysql database connection
+        Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+        Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
-            String query = "DELETE FROM device WHERE ID_DEVICE = ?";
+        String query = "DELETE FROM device WHERE ID_DEVICE = ?";
 
-            PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setInt(1, device_ID);
+        PreparedStatement preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setInt(1, device_ID);
 
-            ResultSet rs = preparedStmt.executeQuery();
-            
-            while (rs.next()) {
-            }
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("database error");
+        ResultSet rs = preparedStmt.executeQuery();
+
+        while (rs.next()) {
         }
         return "device deleted";
     }
