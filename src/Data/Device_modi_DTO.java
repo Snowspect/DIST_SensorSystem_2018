@@ -98,7 +98,7 @@ public class Device_modi_DTO {
         Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
         Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
         // the mysql insert statement, adding a person into person table
-        String query = "UPDATE device SET NAME = ? WHERE DEVICE_ID = ?";
+        String query = "UPDATE device SET NAME = ? WHERE ID_DEVICE = ?";
 
         // create the mysql insert preparedstatement
         PreparedStatement preparedStmt = conn.prepareStatement(query);
