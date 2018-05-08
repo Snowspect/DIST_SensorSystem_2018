@@ -328,10 +328,6 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 for (int i = 0; i < lt.size(); i++) {
                     ret[i] = lt.get(i);
                 }
-                if(ret != null || ret.length > 0){
-                    if(ret[3].equals("ANALOG")) ret[3] = "0";
-                    else if(ret[3].equals("DIGITAL")) ret[3] = "1";
-                }
             } catch (SQLException | ClassNotFoundException ex) {
                 LOGGER.log( Level.SEVERE, ex.toString(), ex );
                 return null;
