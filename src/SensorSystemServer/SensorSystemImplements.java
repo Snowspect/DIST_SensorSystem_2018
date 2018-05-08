@@ -251,12 +251,8 @@ public class SensorSystemImplements implements SensorSystemInterface {
                     status = "Owner: " + tmp;
 
                     //Change sensor type
-                    String tp = "";
-                    if (type == 0) {
-                        tp = "ANALOG";
-                    } else if (type == 1) {
-                        tp = "DIGITAL";
-                    }
+                    String tp = type+"";
+                    
                     tmp = sensor_Change_Sensortype(tp, sensor_id);
                     status = status + " Sensor: " + tmp;
 
@@ -332,9 +328,10 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 for (int i = 0; i < lt.size(); i++) {
                     ret[i] = lt.get(i);
                 }
-                if(ret[3].equals("ANALOG")) ret[3] = "0";
-                else if(ret[3].equals("DIGITAL")) ret[3] = "1";
-
+                if(ret != null || ret.length > 0){
+                    if(ret[3].equals("ANALOG")) ret[3] = "0";
+                    else if(ret[3].equals("DIGITAL")) ret[3] = "1";
+                }
             } catch (SQLException | ClassNotFoundException ex) {
                 LOGGER.log( Level.SEVERE, ex.toString(), ex );
                 return null;
@@ -417,7 +414,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 String c = activeUsers.get(token).campusnetId;
                 if ( c.equals(s)) {
                     List<Integer> lt = sensor_Pull_Related_SensorIDs(device_id);
-
+                    if(lt.isEmpty()) return null;
                     ret = new int[lt.size()];
 
                     for (int i = 0; i < lt.size(); i++) {
