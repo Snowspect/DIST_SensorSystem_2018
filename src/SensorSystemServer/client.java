@@ -78,25 +78,23 @@ public class client {
                                 int token, 
                                 String owner)
     {
-        HashMap<Integer, int[]> ids = get_ids(server, token, owner);
+  
         int[] device_IDs = server.get_Devices_ID(token, owner);
         if(device_IDs == null) return;
         System.out.println("Device - Sensors");
         for (int i = 0; i < device_IDs.length; i++) 
         {
-            if( ids.containsKey( device_IDs[i] ) )
-            {
-                String pstm = device_IDs[i]+" : ";
-                int sensor_ids[] = ids.get(i);
-                if(sensor_ids != null)
-                if(sensor_ids.length > 0 ){
-                    for (int j = 0; j < sensor_ids.length; j++) {
-                        pstm = pstm + sensor_ids[j]+ " - ";
-                    }
+            String pstm = device_IDs[i]+" : ";
+            int sensor_ids[] = server.get_Sensors_ID(token, device_IDs[i]);
+            if(sensor_ids != null)
+            if(sensor_ids.length > 0 ){
+                for (int j = 0; j < sensor_ids.length; j++) {
+                    pstm = pstm + sensor_ids[j]+ " - ";
                 }
+            }
                 
             System.out.println(pstm);
-            }
+            
         }
     }
     

@@ -156,7 +156,19 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 if (c.equals(s)) {
                     Date dt = new Date();
                     Timestamp dx = new Timestamp(dt.getTime());
-                    ret = sensor_CreateSensor(name, id_device, sensorType+"", pin+"", dx, dx, "4");
+                    String st; 
+                    switch (sensorType) {
+                        case 0:
+                            st = "ANALOG";
+                            break;
+                        case 1:
+                            st = "DIGITAL";
+                            break;
+                        default:
+                            return null;
+                    }
+                    
+                    ret = sensor_CreateSensor(name, id_device, st, pin+"", dx, dx, "4");
                 } else {
                     LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, s});
                     return null;
