@@ -144,7 +144,7 @@ public class Sensor_DTO {
                 tx.sensorType = rs.getString("SENSORTYPE");
                 tx.pin = rs.getInt("PIN");
                 tx.created_Date = rs.getString("CREATED_DATE");
-                tx.lastActive_Date = rs.getString("LASTACTIVE_DATE");                
+                tx.lastActive_Date = rs.getString("LASTACTIVE_DATE");           
                 tx.updateTime_Minutes = rs.getInt("UPDATETIME_MINUTES");
                 
                 tmp.add(tx);
@@ -155,10 +155,10 @@ public class Sensor_DTO {
             for (Sensor_DAO sensor_DAO : tmp) {
                 x[i] = sensor_DAO.toString();
                 i++;
-            }            
+            }
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("database error");
         }
         return x;
-    }   
+    }
 }
