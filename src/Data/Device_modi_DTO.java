@@ -13,13 +13,14 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+
 /**
  * Class to hold methods for modifying DB tables
  *
  * @author Team_effort
  */
 public class Device_modi_DTO {
-
+// gjh
     /**
      * Changes owner with a device_id
      *
@@ -202,6 +203,7 @@ public class Device_modi_DTO {
         while (rs.next()) {
             tmp.add(rs.getInt("ID_DEVICE"));
         }
+        
         return tmp;
     }
 }
