@@ -121,12 +121,12 @@ public class client {
                 System.out.println("Input sensor name: ");
                 String name = scanner.nextLine();
                 System.out.println("Input device id: ");
-                String device_id = scanner.nextLine();
+                int device_id = Integer.parseInt(scanner.nextLine());
                 System.out.println("Input sensorType (ANALOG or DIGITAL): ");
-                String type = scanner.nextLine();
+                int type = Integer.parseInt(scanner.nextLine());
                 System.out.println("Input pin number: ");
-                String pin = scanner.nextLine();
-                String respons  = server.create_Sensor(token, name, Integer.parseInt(device_id), type, pin);
+                int pin = Integer.parseInt(scanner.nextLine());
+                String respons  = server.create_Sensor(token, name, device_id, type, pin);
                 System.out.println(respons);
             }
                 break;

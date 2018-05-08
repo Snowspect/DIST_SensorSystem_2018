@@ -42,8 +42,8 @@ public interface SensorSystemInterface {
             int token, 
             String name, 
             int id_device, 
-            String sensorType, 
-            String pin);
+            int sensorType, 
+            int pin);
 
     /*
     *   Create Device

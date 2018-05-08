@@ -47,13 +47,22 @@ public class SensorSystemImplements implements SensorSystemInterface {
     
     public void opdateActiveUsers(){
         Set<Integer> si = activeUsers.keySet();
+        int [] id = new int[activeUsers.size()];
         for (Integer i : si) {
-            opdateToken(i);
+            id[i] = opdateToken(i);
+        }
+        for (int i : id) {
+            if(i != 0){
+                Bruger b = activeUsers.get(i);
+                lastActive.remove(b);
+                activeUsers.remove(i);
+                LOGGER.log(Level.INFO, "{0} was log out", b.campusnetId);
+            }
         }
         LOGGER.log(Level.INFO, "opdate Active Users");
     }
 
-    private void opdateToken(int token) {
+    private int opdateToken(int token) {
         if (activeUsers.containsKey(token)) {
             Bruger b = activeUsers.get(token);
             Date currentTime = new Date();
@@ -61,12 +70,12 @@ public class SensorSystemImplements implements SensorSystemInterface {
 
             if (lastRequestTime.getTime() + 300000 > currentTime.getTime()) {
                 lastActive.replace(b, lastRequestTime, currentTime);
+               return 0;
             } else {
-                lastActive.remove(b);
-                activeUsers.remove(token);
-                LOGGER.log(Level.INFO, "{0} was log out", b.campusnetId);
+                return token;
             }
         }
+        return 0;
     }
 
     private String get_Sensor_Owner(int sensor_id) throws SQLException, ClassNotFoundException {
@@ -131,12 +140,13 @@ public class SensorSystemImplements implements SensorSystemInterface {
         }
     }
 
+    
     public String create_Sensor(
             int token,
             String name,
             int id_device,
-            String sensorType,
-            String pin) {
+            int sensorType,
+            int pin) {
         String ret;
         try {
             opdateToken(token);
@@ -146,7 +156,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 if (c.equals(s)) {
                     Date dt = new Date();
                     Timestamp dx = new Timestamp(dt.getTime());
-                    ret = sensor_CreateSensor(name, id_device, sensorType, pin, dx, dx, "4");
+                    ret = sensor_CreateSensor(name, id_device, sensorType+"", pin+"", dx, dx, "4");
                 } else {
                     LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, s});
                     return null;
@@ -322,6 +332,8 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 for (int i = 0; i < lt.size(); i++) {
                     ret[i] = lt.get(i);
                 }
+                if(ret[3].equals("ANALOG")) ret[3] = "0";
+                else if(ret[3].equals("DIGITAL")) ret[3] = "1";
 
             } catch (SQLException | ClassNotFoundException ex) {
                 LOGGER.log( Level.SEVERE, ex.toString(), ex );
