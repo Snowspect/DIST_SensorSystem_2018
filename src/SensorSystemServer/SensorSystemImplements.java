@@ -47,6 +47,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
     
     public void opdateActiveUsers(){
         Set<Integer> si = activeUsers.keySet();
+        if(si.isEmpty()) return;
         int [] id = new int[activeUsers.size()];
         for (Integer i : si) {
             id[i] = opdateToken(i);
