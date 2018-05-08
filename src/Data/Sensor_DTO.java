@@ -121,35 +121,7 @@ public class Sensor_DTO {
 
         String query = "SELECT * FROM sensor WHERE ID_DEVICE_REF = ?";
 
-<<<<<<< HEAD
-            PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setInt(1, device_ID_Ref);
 
-            ResultSet rs = preparedStmt.executeQuery();
-            
-            while (rs.next()) {
-                Sensor_DAO tx = new Sensor_DAO();
-                tx.sensor_ID = rs.getInt("ID_SENSOR");
-                tx.name = rs.getString("NAME");
-                tx.device_Ref_ID = rs.getInt("ID_DEVICE_REF");
-                tx.sensorType = rs.getString("SENSORTYPE");
-                tx.pin = rs.getInt("PIN");
-                tx.created_Date = rs.getString("CREATED_DATE");
-                tx.lastActive_Date = rs.getString("LASTACTIVE_DATE");           
-                tx.updateTime_Minutes = rs.getInt("UPDATETIME_MINUTES");
-                
-                tmp.add(tx);
-            }
-            //converts DAO array to string array
-            x = new String[tmp.size()];
-            int i = 0;
-            for (Sensor_DAO sensor_DAO : tmp) {
-                x[i] = sensor_DAO.toString();
-                i++;
-            }
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("database error");
-=======
         PreparedStatement preparedStmt = conn.prepareStatement(query);
         preparedStmt.setInt(1, device_ID_Ref);
 
@@ -174,7 +146,6 @@ public class Sensor_DTO {
         for (Sensor_DAO sensor_DAO : tmp) {
             x[i] = sensor_DAO.toString();
             i++;
->>>>>>> dfb2d287e2a7a66f4291d9d0d04f351a708e72de
         }
         return x;
     }
