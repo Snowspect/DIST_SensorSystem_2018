@@ -17,7 +17,7 @@ import javax.jws.WebService;
  */
 public interface SensorSystemInterface {
     
-    
+    @WebMethod public void opdateActiveUsers();
     /*
     * validates toke
     */
@@ -38,18 +38,22 @@ public interface SensorSystemInterface {
     *   @param sensorType   -- Type, Either put ANALOG or DIGITAL
     *   @param pin          -- pin number
     */
-    @WebMethod public String create_Sensor(int token, 
-                                    String name, 
-                                    int id_device, 
-                                    String sensorType, 
-                                    String pin);
-    
+    @WebMethod public String create_Sensor(
+            int token, 
+            String name, 
+            int id_device, 
+            int sensorType, 
+            int pin);
+
     /*
     *   Create Device
     *   @param user -- user id
     *   @param name -- Device name
     */    
     @WebMethod public String create_Device(int token, String name, int external_id, String owner);
+    
+    //@WebMethod public String delete_Sensor(int token, int sensor_id);
+    @WebMethod public String delete_Device(int token, int device_id);
     
     /*
     *   Change Sensor info, pull sensor info and the change what need and use 
@@ -110,6 +114,14 @@ public interface SensorSystemInterface {
     @WebMethod public String [] get_Sensor_Data(int token, int sensor_id);
     
     @WebMethod public String [] get_Sensor_Data_Within_Dates(
+                                            int token,
+                                            int sensor_id, 
+                                            Date older, 
+                                            Date newer); 
+    
+    @WebMethod public String [] get_Measurement_Data(int token, int sensor_id);
+    
+    @WebMethod public String [] get_Measurement_Data_Within_Dates(
                                             int token,
                                             int sensor_id, 
                                             Date older, 

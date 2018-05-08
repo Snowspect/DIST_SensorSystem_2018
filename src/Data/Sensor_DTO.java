@@ -47,7 +47,7 @@ public class Sensor_DTO {
          * hold
          */
         //try to connect to jdbc and create user
-        try {
+        
             // create a mysql database connection
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
 
@@ -71,46 +71,36 @@ public class Sensor_DTO {
 
             //never displaed
             return "sensor_created";
-        } catch (SQLException e) {
-            System.err.println("Got an sql exception!");
-            System.err.println(e.getMessage());
-            return e.getMessage();
-        } catch (Exception e) {
-            System.err.println("Got an exception!");
-            System.err.println(e.getMessage());
-            return e.getMessage();
-        }
     }
-         /**
+    
+    /**
      * pulls entire sensor information based on sensor ID
      */
     public static List<String> sensor_Pull_Sensor(int sensor_ID) throws SQLException, ClassNotFoundException
     {
         ArrayList<String> tmp = new ArrayList<String>();
-        try {
-            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
-            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
-            String query = "SELECT * FROM sensor WHERE ID_SENSOR = ?";
+        Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+        Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
-            PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setInt(1, sensor_ID);
+        String query = "SELECT * FROM sensor WHERE ID_SENSOR = ?";
 
-            ResultSet rs = preparedStmt.executeQuery();
-            
-            while (rs.next()) {
-                tmp.add(rs.getInt("ID_SENSOR") + "");
-                tmp.add(rs.getString("NAME"));
-                tmp.add(rs.getString("ID_DEVICE_REF"));
-                tmp.add(rs.getString("SENSORTYPE"));
-                tmp.add(rs.getInt("PIN") + "");
-                tmp.add(rs.getString("UPDATETIME_MINUTES"));
-                tmp.add(rs.getString("LASTACTIVE_DATE"));
-                tmp.add(rs.getString("CREATED_DATE"));
-            }
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("database error");
+        PreparedStatement preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setInt(1, sensor_ID);
+
+        ResultSet rs = preparedStmt.executeQuery();
+
+        while (rs.next()) {
+            tmp.add(rs.getInt("ID_SENSOR") + "");
+            tmp.add(rs.getString("NAME"));
+            tmp.add(rs.getString("ID_DEVICE_REF"));
+            tmp.add(rs.getString("SENSORTYPE"));
+            tmp.add(rs.getInt("PIN") + "");
+            tmp.add(rs.getString("UPDATETIME_MINUTES"));
+            tmp.add(rs.getString("LASTACTIVE_DATE"));
+            tmp.add(rs.getString("CREATED_DATE"));
         }
+        
         return tmp;
     }
     
@@ -125,12 +115,13 @@ public class Sensor_DTO {
     {
         ArrayList<Sensor_DAO> tmp = new ArrayList<>();
         String[] x = null;
-        try {
-            Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
-            Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
+        
+        Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+        Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
-            String query = "SELECT * FROM sensor WHERE ID_DEVICE_REF = ?";
+        String query = "SELECT * FROM sensor WHERE ID_DEVICE_REF = ?";
 
+<<<<<<< HEAD
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setInt(1, device_ID_Ref);
 
@@ -158,6 +149,32 @@ public class Sensor_DTO {
             }
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("database error");
+=======
+        PreparedStatement preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setInt(1, device_ID_Ref);
+
+        ResultSet rs = preparedStmt.executeQuery();
+
+        while (rs.next()) {
+            Sensor_DAO tx = new Sensor_DAO();
+            tx.sensor_ID = rs.getInt("ID_SENSOR");
+            tx.name = rs.getString("NAME");
+            tx.device_Ref_ID = rs.getInt("ID_DEVICE_REF");
+            tx.sensorType = rs.getString("SENSORTYPE");
+            tx.pin = rs.getInt("PIN");
+            tx.created_Date = rs.getString("CREATED_DATE");
+            tx.lastActive_Date = rs.getString("LASTACTIVE_DATE");                
+            tx.updateTime_Minutes = rs.getInt("UPDATETIME_MINUTES");
+
+            tmp.add(tx);
+        }
+        //converts DAO array to string array
+        x = new String[tmp.size()];
+        int i = 0;
+        for (Sensor_DAO sensor_DAO : tmp) {
+            x[i] = sensor_DAO.toString();
+            i++;
+>>>>>>> dfb2d287e2a7a66f4291d9d0d04f351a708e72de
         }
         return x;
     }

@@ -9,6 +9,7 @@ import static Data.Device_DTO.*;
 import static Data.Device_modi_DTO.*;
 
 import static Data.Measure_modi_DTO.*;
+import Data.Measurement_DAO;
 import static Data.Measurement_DTO.*;
 
 import static Data.Sensor_DTO.*;
@@ -30,6 +31,7 @@ import javax.xml.ws.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /**
  *
@@ -41,37 +43,46 @@ public class SensorSystemImplements implements SensorSystemInterface {
     //private
     private HashMap<Integer, Bruger> activeUsers;
     private HashMap<Bruger, Date> lastActive;
+    private static final Logger LOGGER = Logger.getLogger( ServerMain.class.getName() );
+    
+    public void opdateActiveUsers(){
+        Set<Integer> si = activeUsers.keySet();
+        int [] id = new int[activeUsers.size()];
+        for (Integer i : si) {
+            id[i] = opdateToken(i);
+        }
+        for (int i : id) {
+            if(i != 0){
+                Bruger b = activeUsers.get(i);
+                lastActive.remove(b);
+                activeUsers.remove(i);
+                LOGGER.log(Level.INFO, "{0} was log out", b.campusnetId);
+            }
+        }
+        LOGGER.log(Level.INFO, "opdate Active Users");
+    }
 
-    private void opdateToken(int token) {
-        if(activeUsers.containsKey(token)){
-            System.out.println("hey");
+    private int opdateToken(int token) {
+        if (activeUsers.containsKey(token)) {
             Bruger b = activeUsers.get(token);
             Date currentTime = new Date();
             Date lastRequestTime = lastActive.get(b);
 
             if (lastRequestTime.getTime() + 300000 > currentTime.getTime()) {
                 lastActive.replace(b, lastRequestTime, currentTime);
-                System.out.println("hey2");
+               return 0;
             } else {
-                System.out.println("hey3");
-                lastActive.remove(b);
-                activeUsers.remove(token);
+                return token;
             }
         }
-    }
-    
-    private String get_Device_Owner(int device_id) throws ClassNotFoundException, SQLException {
-        String[] ret = new String[0];    
-
-        List<String> lt = device_Pull_Device(device_id);
-        return lt.get(3);
+        return 0;
     }
 
-    private String get_Sensor_Owner(int sensor_id) throws SQLException, ClassNotFoundException{
+    private String get_Sensor_Owner(int sensor_id) throws SQLException, ClassNotFoundException {
         List<String> lt = sensor_Pull_Sensor(sensor_id);
-        return get_Device_Owner( Integer.parseInt(lt.get(2)) );  
+        return device_Pull_Owner(Integer.parseInt(lt.get(2)));
     }
-    
+
     private int[] get_Devices_ID_p(String owner) throws SQLException, ClassNotFoundException {
         List<Integer> lt = device_Pull_all_device_ids(owner);
         int[] ret = new int[lt.size()];
@@ -81,7 +92,6 @@ public class SensorSystemImplements implements SensorSystemInterface {
         }
         return ret;
     }
-    
 
     //public
     public SensorSystemImplements() {
@@ -89,7 +99,6 @@ public class SensorSystemImplements implements SensorSystemInterface {
         lastActive = new HashMap<>();
     }
 
-    
     public int validatToken(int token) {
         opdateToken(token);
         if (activeUsers.containsKey(token)) {
@@ -99,9 +108,11 @@ public class SensorSystemImplements implements SensorSystemInterface {
         }
     }
 
-    public int login(String username, String password) {
+    public int login(
+            String username, 
+            String password) {
         try {
-            System.out.println("Login: " + username);
+            LOGGER.log(Level.INFO, "Login: {0}", username);
             URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
             QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
             Service service = Service.create(url, qname);
@@ -116,86 +127,124 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 id_code = sr.nextInt();
                 System.out.println(id_code);
             } while (activeUsers.containsValue(id_code) || id_code == 0);
-            
+
             b.campusnetId = username;
             activeUsers.put(id_code, b);
             lastActive.put(b, new Date());
+            LOGGER.log( Level.INFO, "user login success");
             return id_code;
 
         } catch (Exception ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log( Level.SEVERE, ex.toString(), ex );
             return 0;
         }
     }
 
-    public String create_Sensor(int token,
+    
+    public String create_Sensor(
+            int token,
             String name,
             int id_device,
-            String sensorType,
-            String pin) {
-        String ret = "";
+            int sensorType,
+            int pin) {
+        String ret;
         try {
             opdateToken(token);
             if (activeUsers.containsKey(token)) {
-                String[] s = get_Device_Info(token, id_device);
-                if (activeUsers.get(token).campusnetId.equals(s[3])) {
+                String s = device_Pull_Owner(id_device);
+                String c = activeUsers.get(token).campusnetId;
+                if (c.equals(s)) {
                     Date dt = new Date();
                     Timestamp dx = new Timestamp(dt.getTime());
-                    ret = sensor_CreateSensor(name, id_device, sensorType, pin, dx, dx, "4");
+                    ret = sensor_CreateSensor(name, id_device, sensorType+"", pin+"", dx, dx, "4");
                 } else {
-                    System.out.println(activeUsers.get(token).campusnetId + " !=" + s[3]);
+                    LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, s});
                     return null;
                 }
             } else {
-                System.out.println("Token: " + token + " not in use");
+                LOGGER.log(Level.INFO, "Token: {0} not in use", token);
                 return null;
             }
         } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log( Level.SEVERE, ex.toString(), ex );
             return null;
         }
         return ret;
     }
 
-    public String create_Device(int token, String name, int external_id, String owner) {
-        String ret = "";
+    public String create_Device(
+            int token,
+            String name,
+            int external_id,
+            String owner) {
+        String ret;
         opdateToken(token);
         if (activeUsers.containsKey(token)) {
             String id = activeUsers.get(token).campusnetId;
-            if ( id.equals(owner)) {
+            if (id.equals(owner)) {
                 try {
                     Date dt = new Date();
                     Timestamp dx = new Timestamp(dt.getTime());
                     ret = device_CreateDevice(external_id, name, owner, dx, dx);
                 } catch (SQLException | ClassNotFoundException ex) {
-                    ex.printStackTrace();
-                    Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log( Level.SEVERE, ex.toString(), ex );
                     return null;
                 }
             } else {
-                System.out.println(id + " !=" + owner);
+                LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{id, owner});
                 return null;
             }
         } else {
-            System.out.println("Token: " + token + " not in use");
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
+            return null;
+        }
+
+        return ret;
+    }
+    
+    public String delete_Device(
+            int token,
+            int device_id) {
+        String ret;
+        opdateToken(token);
+        if (activeUsers.containsKey(token)) {
+            String id = activeUsers.get(token).campusnetId;
+            
+                try {
+                    String o = device_Pull_Owner(device_id);
+                    if (id.equals( o )) {
+                    ret = device_Delete_Device(device_id);
+                    } else {
+                        LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{id, o});
+                        return null;
+                    }
+                } catch (SQLException | ClassNotFoundException ex) {
+                    LOGGER.log( Level.SEVERE, ex.toString(), ex );
+                    return null;
+                }
+            
+        } else {
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
 
         return ret;
     }
 
-    public String set_Sensor_Info(int token,
+    public String set_Sensor_Info(
+            int token,
             int sensor_id,
             int device_id_ref,
             int type,
             int pin,
             String name) {
-        String status = "";
+        String status ;
         opdateToken(token);
         if (activeUsers.containsKey(token)) {
-            String[] s = get_Device_Info(token, device_id_ref);
-            if (activeUsers.get(token).campusnetId.equals(s[3])) {
-                try {
+           try {
+                String s = device_Pull_Owner(device_id_ref);
+                String c = activeUsers.get(token).campusnetId;
+                if (c.equals(s))  {
                     //Change device its connected to
                     String dir = device_id_ref + "";
                     String tmp = sensor_Change_Device_Ref(dir);
@@ -219,143 +268,210 @@ public class SensorSystemImplements implements SensorSystemInterface {
                     //Change name
                     tmp = sensor_Change_Name(name, sensor_id);
                     status = status + " Name: " + tmp;
-                } catch (SQLException | ClassNotFoundException ex) {
-                    Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
-                    return null;
-                }
-            } else {
-                System.out.println(activeUsers.get(token).campusnetId + " !=" + s[3]);
+                } else {
+                LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, s});
                 return null;
-            }
+                }   
+            } catch (SQLException | ClassNotFoundException ex) {
+                LOGGER.log( Level.SEVERE, ex.toString(), ex );
+                return null;
+            }   
         } else {
-            System.out.println("Token: " + token + " not in use");
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
         return status;
     }
 
-    public String set_Device_Info(int token,
+    public String set_Device_Info(
+            int token,
             int device_id,
             String owner,
             String name) {
-        String status = "";
+        String status;
         opdateToken(token);
         if (activeUsers.containsKey(token)) {
-            if (activeUsers.get(token).campusnetId.equals(owner)) {
-                try {
+            try {
+                String s = device_Pull_Owner(device_id);
+                String c = activeUsers.get(token).campusnetId;
+                if (c.equals(s)) {
                     String tmp = device_Change_Owner(owner, device_id);
                     status = "Owner: " + tmp;
                     tmp = device_Change_Name(name, device_id);
-                    status = status + " Name: " + tmp;
-                } catch (SQLException | ClassNotFoundException ex) {
-                    Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+                    status = status + " Name: " + tmp;               
+                } else {
+                    LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, owner});
                     return null;
                 }
-            } else {
-                System.out.println(activeUsers.get(token).campusnetId + " !=" + owner);
-                return null;
-            }
+            } catch (SQLException | ClassNotFoundException ex) {
+                    LOGGER.log( Level.SEVERE, ex.toString(), ex );
+                    return null;
+                }
         } else {
-            System.out.println("Token: " + token + " not in use");
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
         return status;
     }
-    
-    public String[] get_Sensor_Info(int token, int sensor_id) {
-        String[] ret = new String[0];
-        opdateToken(token);
 
-        if (activeUsers.containsKey(token)) 
-        {
-            try {
-                List<String> lt = sensor_Pull_Sensor(sensor_id);
-                String s = get_Device_Owner(Integer.parseInt(lt.get(2)));
-                String c = activeUsers.get(token).campusnetId;
-                if( !( s.equals(c) ) )
-                {
-                    System.out.println(activeUsers.get(token).campusnetId + " !=" + s);
-                    return null;
-                }
-                ret = new String[lt.size()];
-                for (int i = 0; i < lt.size(); i++) {
-                    ret[i] = lt.get(i);
-                }
-
-            } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
-            }
-        }else {
-            System.out.println("Token: " + token + " not in use");
-            return null;
-        }
-        return ret;
-    }
-    
-    public String[] get_All_Sensor_Info(int token, int device_id) {
+    public String[] get_Sensor_Info(
+            int token, 
+            int sensor_id) {
         String[] ret;
         opdateToken(token);
-        if (activeUsers.containsKey(token)) 
-        {
-            String[] sA = get_Device_Info(token, device_id);
-            if( !(sA[3].equals( activeUsers.get(token).campusnetId )) )
-            {
-                System.out.println(activeUsers.get(token).campusnetId + " !=" + sA[3]);
-                return null;
-            }
+        if (activeUsers.containsKey(token)) {
             try {
-                 ret = sensor_Pull_All_Sensors(device_id);
+                List<String> lt = sensor_Pull_Sensor(sensor_id);
+                String s = device_Pull_Owner(Integer.parseInt(lt.get(2)));
+                String c = activeUsers.get(token).campusnetId;
+                if (!(s.equals(c))) {
+                    LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, s});
+                    return null;
+                }
+                ret = new String[lt.size()];
+                for (int i = 0; i < lt.size(); i++) {
+                    ret[i] = lt.get(i);
+                }
+                if(ret[3].equals("ANALOG")) ret[3] = "0";
+                else if(ret[3].equals("DIGITAL")) ret[3] = "1";
 
             } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log( Level.SEVERE, ex.toString(), ex );
                 return null;
             }
-        }else {
-            System.out.println("Token: " + token + " not in use");
+        } else {
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
+            return null;
+        }
+        return ret;
+    }
+
+    public String[] get_Device_Info(
+            int token, 
+            int device_id) {
+        String[] ret;
+        opdateToken(token);
+        if (activeUsers.containsKey(token)) {
+            try {
+                List<String> lt = device_Pull_Device(device_id);
+                String c = activeUsers.get(token).campusnetId;
+                if (!(lt.get(3).equals( c ))) {
+                    LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, lt.get(3)});
+                    return null;
+                }
+                ret = new String[lt.size()];
+                for (int i = 0; i < lt.size(); i++) {
+                    ret[i] = lt.get(i);
+                }
+            } catch (SQLException | ClassNotFoundException ex) {
+                LOGGER.log( Level.SEVERE, ex.toString(), ex );
+                return null;
+            }
+        } else {
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
         return ret;
     }
     
-
-    public String[] get_Device_Info(int token, int device_id) {
-        String[] ret = new String[0];
-
-        opdateToken(token);
-        if ( activeUsers.containsKey(token) ) {
+    public int[] get_Devices_ID(
+            int token, 
+            String owner) {
+    int[] ret;
+    opdateToken(token);
+    if (activeUsers.containsKey(token)) {
+        String c = activeUsers.get(token).campusnetId;
+        if ( c.equals(owner)) {
+            List<Integer> lt = new ArrayList<>();
             try {
-                List<String> lt = device_Pull_Device(device_id);
-                if( !(lt.get(3).equals( activeUsers.get(token).campusnetId )) ){
-                    System.out.println(activeUsers.get(token).campusnetId + " !=" + lt.get(3));
+                lt = device_Pull_all_device_ids(owner);
+            } catch (ClassNotFoundException | SQLException ex) {
+                LOGGER.log( Level.SEVERE, ex.toString(), ex );
+            }
+
+            ret = new int[lt.size()];
+
+            for (int i = 0; i < lt.size(); i++) {
+                ret[i] = lt.get(i);
+            }
+        } else {
+            LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, owner});
+            return null;
+        }
+    } else {
+        LOGGER.log(Level.INFO, "Token: {0} not in use", token);
+        return null;
+    }
+    return ret;
+}
+
+    public int[] get_Sensors_ID(
+            int token, 
+            int device_id) {
+        
+        int[] ret;
+        opdateToken(token);
+        if (activeUsers.containsKey(token)) {
+            try {
+                String s = device_Pull_Owner(device_id);
+                String c = activeUsers.get(token).campusnetId;
+                if ( c.equals(s)) {
+                    List<Integer> lt = sensor_Pull_Related_SensorIDs(device_id);
+
+                    ret = new int[lt.size()];
+
+                    for (int i = 0; i < lt.size(); i++) {
+                        ret[i] = lt.get(i);
+                    }
+                } else {
+                    LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, s});
                     return null;
                 }
-                
-                ret = new String[lt.size()];
-
-                for (int i = 0; i < lt.size(); i++) {
-                    ret[i] = lt.get(i);
-                }
             } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log( Level.SEVERE, ex.toString(), ex );
                 return null;
             }
+        } else {
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
+            return null;
         }
-        else {
-            System.out.println("Token: " + token + " not in use");
+        return ret;
+    }
+    
+    public String[] get_All_Sensor_Info(
+            int token, 
+            int device_id) {
+        String[] ret;
+        opdateToken(token);
+        if (activeUsers.containsKey(token)) {
+            try {
+                String s = device_Pull_Owner(device_id);
+                String c = activeUsers.get(token).campusnetId;
+                if ( !( s.equals(c) ) ) {
+                    LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, s});
+                    return null;
+                }
+                ret = sensor_Pull_All_Sensors(device_id);
+            } catch (SQLException | ClassNotFoundException ex) {
+                LOGGER.log( Level.SEVERE, ex.toString(), ex );
+                return null;
+            }
+        } else {
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
         return ret;
     }
 
-    public String[] get_ids(int token, String owner) {
+    public String[] get_ids(
+            int token, 
+            String owner) {
         String[] ret = new String[0];
         ArrayList<ArrayList<Integer>> related_sensor_id = new ArrayList<>();
         opdateToken(token);
-        if (activeUsers.containsKey(token)) 
-        {   
-            if(activeUsers.get(token).campusnetId.equals(owner))
-            {
+        if (activeUsers.containsKey(token)) {
+            String c = activeUsers.get(token).campusnetId;
+            if ( c.equals(owner) ) {
                 try {
                     int[] devices_id = get_Devices_ID_p(owner);
                     for (Integer i : devices_id) {
@@ -364,149 +480,155 @@ public class SensorSystemImplements implements SensorSystemInterface {
                         //ret.put(i, s);
                     }
                     for (int i = 0; i < devices_id.length; i++) {
-                        List<Integer> lt = sensor_Pull_Related_SensorIDs( devices_id[i] );
+                        List<Integer> lt = sensor_Pull_Related_SensorIDs(devices_id[i]);
                         ret[i] = devices_id[i] + " : ";
                         for (int j = 0; j < lt.size(); j++) {
                             ret[i] = ret[i] + "-" + lt.get(j);
                         }
                     }
                 } catch (SQLException | ClassNotFoundException ex) {
-                    Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log( Level.SEVERE, ex.toString(), ex );
                     return null;
                 }
-            }
-            else {
-                System.out.println(activeUsers.get(token).campusnetId + " !=" + owner);
+            } else {
+                LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, owner});
                 return null;
             }
-        }
-        else {
-            System.out.println("Token: " + token + " not in use");
+        } else {
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
         return ret;
     }
 
-    public int[] get_Devices_ID(int token, String owner) {
-        int[] ret = new int[0];
-        opdateToken(token);
-        if (activeUsers.containsKey(token)) {
-            if(activeUsers.get(token).campusnetId.equals(owner)){
-                List<Integer> lt = device_Pull_all_device_ids(owner);
-
-                ret = new int[lt.size()];
-
-                for (int i = 0; i < lt.size(); i++) {
-                    ret[i] = lt.get(i);
-                }
-            }
-            else{ 
-                System.out.println(activeUsers.get(token).campusnetId + " !=" + owner);
-                return null;
-            }   
-        }
-        else {
-            System.out.println("Token: " + token + " not in use");
-            return null;
-        }
-        return ret;
-    }
-
-    public int[] get_Sensors_ID(int token, int device_id) {
-        int[] ret = new int[0];
-        opdateToken(token);
-        if (activeUsers.containsKey(token)) {
-            try {
-                String s = get_Device_Owner(device_id);
-                if(activeUsers.get(token).campusnetId.equals( s )){
-                    List<Integer> lt = sensor_Pull_Related_SensorIDs(device_id);
-
-                    ret = new int[lt.size()];
-
-                    for (int i = 0; i < lt.size(); i++) {
-                        ret[i] = lt.get(i);
-                    }
-                }
-                else{ 
-                    System.out.println(activeUsers.get(token).campusnetId + " !=" + s);
-                    return null;
-                }
-            } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
-            }
-        }
-        else {
-            System.out.println("Token: " + token + " not in use");
-            return null;
-        }
-        return ret;
-    }
-
-    public String[] get_Sensor_Data(int token, int sensor_id) {
-        String[] ret = new String[0];
+    public String[] get_Sensor_Data(
+            int token, 
+            int sensor_id) {
+        String[] ret;
         opdateToken(token);
         if (activeUsers.containsKey(token)) {
             try {
                 String b = activeUsers.get(token).campusnetId;
                 String o = get_Sensor_Owner(sensor_id);
-                if (b.equals( o ) ) {
+                if (b.equals(o)) {
                     List<String> lt = pull_all_data(sensor_id);
                     ret = new String[lt.size()];
 
                     for (int i = 0; i < lt.size(); i++) {
                         ret[i] = lt.get(i);
                     }
-                }
-                else{ 
-                    System.out.println( b + " != " + o );
+                } else {
+                    LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{b, o});
                     return null;
                 }
             } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log( Level.SEVERE, ex.toString(), ex );
                 return null;
             }
-        }
-        else {
-            System.out.println("Token: " + token + " not in use");
+        } else {
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
         return ret;
     }
 
-    public String[] get_Sensor_Data_Within_Dates(int token,
+    public String[] get_Sensor_Data_Within_Dates(
+            int token,
             int sensor_id,
             Date older,
             Date newer) {
-        String[] ret = new String[0];
+        String[] ret;
 
         opdateToken(token);
         if (activeUsers.containsKey(token)) {
             try {
                 String b = activeUsers.get(token).campusnetId;
                 String o = get_Sensor_Owner(sensor_id);
-                if (b.equals( o ) ) {
+                if (b.equals(o)) {
                     List<String> lt = pull_data_within_dates(older.getTime(), newer.getTime(), sensor_id);
                     ret = new String[lt.size()];
 
                     for (int i = 0; i < lt.size(); i++) {
                         ret[i] = lt.get(i);
                     }
-                }
-                else{ 
-                    System.out.println( b + " != " + o );
+                } else {
+                    LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{b, o});
                     return null;
                 }
             } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(SensorSystemImplements.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log( Level.SEVERE, ex.toString(), ex );
                 return null;
             }
-        }
-        else {
-            System.out.println("Token: " + token + " not in use");
+        } else {
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
         return ret;
     }
 
+    public String[] get_Measurement_Data(
+            int token, 
+            int sensor_id) {
+        String[] ret;
+        opdateToken(token);
+        if (activeUsers.containsKey(token)) {
+            try {
+                String b = activeUsers.get(token).campusnetId;
+                String o = get_Sensor_Owner(sensor_id);
+                if ( b.equals( o ) ) {
+                    List<Measurement_DAO> lt = pull_all_measurements(sensor_id);
+                    ret = new String[lt.size()];
+
+                    for (int i = 0; i < lt.size(); i++) {
+                        Measurement_DAO dao = lt.get(i);
+                        ret[i] = dao.toString();
+                    }
+                } else {
+                    LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{b, o});
+                    return null;
+                }
+            } catch (SQLException | ClassNotFoundException ex) {
+                LOGGER.log( Level.SEVERE, ex.toString(), ex );
+                return null;
+            }
+        } else {
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
+            return null;
+        }
+        return ret;
+    }
+
+    public String[] get_Measurement_Data_Within_Dates(
+            int token,
+            int sensor_id,
+            Date older,
+            Date newer) {
+        String[] ret;
+        opdateToken(token);
+        if (activeUsers.containsKey(token)) {
+            try {
+                String b = activeUsers.get(token).campusnetId;
+                String o = get_Sensor_Owner(sensor_id);
+                if ( b.equals( o ) ) {
+                    List<Measurement_DAO> lt = pull_all_measurements_within_dates(older.getTime(), newer.getTime(), sensor_id);
+                    ret = new String[lt.size()];
+
+                    for (int i = 0; i < lt.size(); i++) {
+                        Measurement_DAO dao = lt.get(i);
+                        ret[i] = dao.toString();
+                    }
+                } else {
+                    LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{b, o});
+                    return null;
+                }
+            } catch (SQLException | ClassNotFoundException ex) {
+                LOGGER.log( Level.SEVERE, ex.toString(), ex );
+                return null;
+            }
+        } else {
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
+            return null;
+        }
+        return ret;
+    }
 }
