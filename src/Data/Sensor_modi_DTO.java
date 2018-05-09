@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String sensor_Change_Device_Ref(String device_id_ref) throws SQLException, ClassNotFoundException //get question from database
+    public static String sensor_Change_Device_Ref(String device_id_ref, int id_Sensor_ref) throws SQLException, ClassNotFoundException //get question from database
     {
         //try to connect to jdbc and create user
         
@@ -33,11 +34,12 @@ public class Sensor_modi_DTO {
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
-            String query = "INSERT INTO sensor (ID_DEVICE_REF) VALUES (?)";
-
+            String query = "UPDATE sensor SET ID_DEVICE_REF WHERE ID_SENSOR = ?";
+            
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, device_id_ref);
+            preparedStmt.setInt(2, id_Sensor_ref);
             // execute the preparedstatement
             preparedStmt.execute();
 
@@ -55,7 +57,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String sensor_Change_Sensortype(String sensortype, int sensor_id_ref) throws SQLException, ClassNotFoundException 
+    public static String sensor_Change_Sensortype(String sensortype, int id_Sensor_ref) throws SQLException, ClassNotFoundException 
     {
         //try to connect to jdbc and create user
         // create a mysql database connection
@@ -63,12 +65,12 @@ public class Sensor_modi_DTO {
         Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
         // the mysql insert statement, adding a person into person table
-        String query = "INSERT INTO sensor (SENSORTYPE) VALUES (?) WHERE ID_SENSOR = ?";
-
+        String query = "UPDATE sensor SET SENSORTYPE = ? WHERE ID_SENSOR = ?";
+        
         // create the mysql insert preparedstatement
         PreparedStatement preparedStmt = conn.prepareStatement(query);
         preparedStmt.setString(1, sensortype);
-        preparedStmt.setInt(2, sensor_id_ref);
+        preparedStmt.setInt(2, id_Sensor_ref);
         // execute the preparedstatement
         preparedStmt.execute();
 
@@ -86,19 +88,19 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String sensor_Change_Pin(String pin, int sensor_id_ref) throws SQLException, ClassNotFoundException 
+    public static String sensor_Change_Pin(String pin, int id_Sensor_ref) throws SQLException, ClassNotFoundException 
     {
         //try to connect to jdbc and create user
         // create a mysql database connection
         Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
         Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
         // the mysql insert statement, adding a person into person table
-        String query = "INSERT INTO sensor (PIN) VALUES (?) WHERE ID_SENSOR = ?";
-
+        String query = "UPDATE sensor SET PIN = ? WHERE ID_SENSOR = ?";
+        
         // create the mysql insert preparedstatement
         PreparedStatement preparedStmt = conn.prepareStatement(query);
         preparedStmt.setString(1, pin);
-        preparedStmt.setInt(2, sensor_id_ref);
+        preparedStmt.setInt(2, id_Sensor_ref);
         // execute the preparedstatement
         preparedStmt.execute();
 
@@ -116,7 +118,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String sensor_Change_LastActive(String lastActive_Date) throws SQLException, ClassNotFoundException 
+    public static String sensor_Change_LastActive(Timestamp lastActive_Date, int id_Sensor_ref) throws SQLException, ClassNotFoundException 
     {
         //try to connect to jdbc and create user
         // create a mysql database connection
@@ -124,14 +126,15 @@ public class Sensor_modi_DTO {
         Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
         // the mysql insert statement, adding a person into person table
-        String query = "INSERT INTO sensor (LASTACTIVE_DATE) VALUES (?)";
-
+        String query = "UPDATE sensor SET LASTACTIVE_DATE = ? WHERE ID_SENSOR = ?";
+        
         // create the mysql insert preparedstatement
         PreparedStatement preparedStmt = conn.prepareStatement(query);
-        preparedStmt.setString(1, lastActive_Date);
+        preparedStmt.setTimestamp(1, lastActive_Date);
+        preparedStmt.setInt(2, id_Sensor_ref);
         // execute the preparedstatement
         preparedStmt.execute();
-
+        
         //close connection
         conn.close();
 
@@ -146,7 +149,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String sensor_Change_Updatetime(String updatetime_Minutes) throws SQLException, ClassNotFoundException 
+    public static String sensor_Change_Updatetime(String updatetime_Minutes, int id_Sensor_ref) throws SQLException, ClassNotFoundException 
     {
         //try to connect to jdbc and create user
         // create a mysql database connection
@@ -154,11 +157,12 @@ public class Sensor_modi_DTO {
         Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
 
         // the mysql insert statement, adding a person into person table
-        String query = "INSERT INTO sensor (UPDATETIME_MINUTES) VALUES (?)";
+        String query = "UPDATE sensor SET UPDATETIME_MINUTES = ? WHERE ID_SENSOR = ?";
 
         // create the mysql insert preparedstatement
         PreparedStatement preparedStmt = conn.prepareStatement(query);
         preparedStmt.setString(1, updatetime_Minutes);
+        preparedStmt.setInt(2, id_Sensor_ref);
         // execute the preparedstatement
         preparedStmt.execute();
 
@@ -176,7 +180,7 @@ public class Sensor_modi_DTO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static String sensor_Change_Name(String sensor_name, int sensor_id) throws SQLException, ClassNotFoundException 
+    public static String sensor_Change_Name(String sensor_name, int id_Sensor_ref) throws SQLException, ClassNotFoundException 
     {
         //try to connect to jdbc and create user
         // create a mysql database connection
@@ -189,7 +193,7 @@ public class Sensor_modi_DTO {
         // create the mysql insert preparedstatement
         PreparedStatement preparedStmt = conn.prepareStatement(query);
         preparedStmt.setString(1, sensor_name);
-        preparedStmt.setInt(2, sensor_id);
+        preparedStmt.setInt(2, id_Sensor_ref);
         // execute the preparedstatement
         preparedStmt.execute();
 
