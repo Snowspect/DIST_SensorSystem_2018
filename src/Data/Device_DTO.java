@@ -151,6 +151,6 @@ public class Device_DTO
 
         while (rs.next()) {
         }
-        return "device deleted";
+        return "Device deleted";
     }
 }

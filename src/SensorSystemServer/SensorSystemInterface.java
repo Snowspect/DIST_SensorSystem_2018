@@ -55,6 +55,8 @@ public interface SensorSystemInterface {
     //@WebMethod public String delete_Sensor(int token, int sensor_id);
     @WebMethod public String delete_Device(int token, int device_id);
     
+    @WebMethod public String delete_Sensor(int token, int sensor_id);
+    
     /*
     *   Change Sensor info, pull sensor info and the change what need and use 
     *   this to send it back to database

@@ -49,7 +49,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
         Set<Integer> si = activeUsers.keySet();
         if(activeUsers.isEmpty()) return;
         int [] id = new int[activeUsers.size()];
-        for (Integer i : si) {
+        for (int i = 0; i < activeUsers.size(); i++) {
             id[i] = opdateToken(i);
         }
         for (int i : id) {
@@ -245,6 +245,35 @@ public class SensorSystemImplements implements SensorSystemInterface {
         return ret;
     }
 
+    public String delete_Sensor(
+            int token,
+            int sensor_id)
+    {
+        String ret;
+        opdateToken(token);
+        if (activeUsers.containsKey(token)) {
+            String id = activeUsers.get(token).campusnetId;
+                try {
+                    String o = get_Sensor_Owner(sensor_id);
+                    if (id.equals( o )) {
+                    ret = sensor_Delete_Sensor(sensor_id);
+                    } else {
+                        LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{id, o});
+                        return null;
+                    }
+                } catch (SQLException | ClassNotFoundException ex) {
+                    LOGGER.log( Level.SEVERE, ex.toString(), ex );
+                    return null;
+                }
+            
+        } else {
+            LOGGER.log(Level.INFO, "Token: {0} not in use", token);
+            return null;
+        }
+        //LOGGER.log(Level.INFO, "token: {0} delete a device", token);
+        return ret;
+    }
+    
     public String set_Sensor_Info(
             int token,
             int sensor_id,
@@ -261,22 +290,23 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 if (c.equals(s))  {
                     //Change device its connected to
                     String dir = device_id_ref + "";
-                    String tmp = sensor_Change_Device_Ref(dir, sensor_id);
+                    sensor_Change_Device_Ref(dir, sensor_id);
+                    
                     status = "Device: " + dir;
 
                     //Change sensor type
                     String tp = type+"";
                     
-                    tmp = sensor_Change_Sensortype(tp, sensor_id);
+                    sensor_Change_Sensortype(tp, sensor_id);
                     status = status + " Sensor: " + tp;
 
                     //Change pin
                     String pn = pin + "";
-                    tmp = sensor_Change_Pin(pn, sensor_id);
+                    sensor_Change_Pin(pn, sensor_id);
                     status = status + " Pin: " + pn;
 
                     //Change name
-                    tmp = sensor_Change_Name(name, sensor_id);
+                    sensor_Change_Name(name, sensor_id);
                     status = status + " Name: " + name;
                     LOGGER.log(Level.INFO, "Token: {0} - {1}", new Object[]{token, status});
                 } else {

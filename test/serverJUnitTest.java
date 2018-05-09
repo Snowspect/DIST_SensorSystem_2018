@@ -8,7 +8,6 @@ import SensorSystemServer.SensorSystemInterface;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.namespace.QName;
@@ -75,51 +74,105 @@ public class serverJUnitTest {
     {
         assertTrue(server.validatToken(token) == token);
     }
-    @Test
-    public void delete()
-    {
-        int i[] = server.get_Devices_ID(token, "s164916");
-        assertTrue(i.length != 0);
-        for (int j = 0; j < i.length; j++) {
-            System.out.println(server.delete_Device(token, i[j]));
-        }
-    }
-   
+       
     @Test 
     public void test_Device()
     {
-        String ret = server.create_Device(token, "test_device", 42, "s164916");
+        String name = "test_device";
+        String ret = server.create_Device(token, name, 42, "s164916");
         assertTrue("Device failed to create "+ret, Objects.equals(ret, "device_created"));
-        ret = server.create_Device(token+1, "test_device", 42, "s164916");
+        
+        ret = server.create_Device(token+1, name, 42, "s164916");
         assertTrue("wrong token failed "+ret, ret == null);
-        ret = server.create_Device(token, "test_device", 42, "s364916");
+        
+        ret = server.create_Device(token, name, 42, "s364916");
         assertTrue("wrong user failed "+ret, ret == null); 
         
         int[] d_id = server.get_Devices_ID(token, "s164916");
         assertTrue(d_id.length > 0);
         
-        for (int i = 0; i < d_id.length; i++) {
-            String[] si = server.get_Device_Info(token, d_id[i]);
-            assertTrue( si.length > 0);
-            for (String string : si) {
+        for (int i = 0; i < d_id.length - 1; i++) {
+            String[] di = server.get_Device_Info(token, d_id[i]);
+            assertTrue(di.length > 0);
+            assertTrue(Integer.parseInt(di[0]) == d_id[i]);
+            assertTrue(di[2].equals(name));
+            assertTrue(di[3].equals("s164916"));
+            
+            for (String string : di) {
                 System.out.println(string);
             }
-            String di = server.set_Device_Info(token, Integer.parseInt(si[0]), si[3], si[2]);
-            assertFalse(di.isEmpty());
-            System.out.println(di);
+            String s = server.set_Device_Info(token, Integer.parseInt(di[0]), "test", di[2]);
+            assertFalse(s.isEmpty());
+            System.out.println(s);
+            di = server.get_Device_Info(token, d_id[i]);
+            assertTrue(di[2].equals("test"));
+            
         }  
     }
     
     @Test
     public void test_Sensor()
     {
-        String name = "john";        
-        String ret = server.create_Sensor(token, name, 18, 1, 3);
+        String name = "john";
+        int type = 1;
+        int pin = 3;
+        int[] d_id = server.get_Devices_ID(token, "s164916");
+        String ret = server.create_Sensor(token, name, d_id[0], type, pin);
         assertTrue("Sensor failed to create "+ret, Objects.equals(ret, "sensor_created"));
-        String[] si = server.get_Sensor_Info(token, 23);
-        assertTrue( si.length > 0);
-        for (String string : si) {
-            System.out.println(string);
+        
+        ret = server.create_Sensor(token+1, name, d_id[0], type, pin);
+        assertTrue("wrong token failed "+ret, ret == null);
+        
+        ret = server.create_Sensor(token, name, 1, type, pin);
+        assertTrue("wrong device failed "+ret, ret == null);
+        
+        ret = server.create_Sensor(token, name, d_id[0], 2, pin);
+        assertTrue("wrong pin failed "+ret, ret == null);
+        
+        int[] s_id = server.get_Sensors_ID(token, d_id[0]);
+        
+        for (int i = 0; i < s_id.length - 1; i++) {
+            String[] si = server.get_Sensor_Info(token, s_id[i]);
+            assertTrue( si.length > 0);
+            assertTrue(Integer.parseInt(si[0]) == s_id[i]);
+            assertTrue(si[1].equals(name));
+            assertTrue(Integer.parseInt(si[1]) == d_id[0]);
+            assertTrue(si[2].equals("DIGITAL"));
+            assertTrue(Integer.parseInt(si[3]) == pin);
+            
+            for (String string : si) {
+                System.out.println(string);
+            }
+            String s = server.set_Sensor_Info(token, s_id[i], d_id[0], type-1, pin-1, "paul");
+            
+            si = server.get_Sensor_Info(token, s_id[i]);
+            assertTrue( si.length > 0);
+            assertTrue(Integer.parseInt(si[0]) == s_id[i]);
+            assertTrue(si[1].equals("paul"));
+            assertTrue(Integer.parseInt(si[1]) == d_id[0]);
+            assertTrue( si[2].equals("ANALOG"));
+            assertTrue(Integer.parseInt(si[3]) == pin-1);
+        }
+        
+    }
+    @Test
+    public void delete()
+    {
+        int d_id[] = server.get_Devices_ID(token, "s164916");
+        assertTrue(d_id.length != 0);
+        for (int j = 0; j < d_id.length; j++) {
+            int s_id[] = server.get_Sensors_ID(token, d_id[j]);
+            
+            String s;
+            if(s_id.length > 0)
+            {
+                for (int i = 0; i < s_id.length-1; i++) {
+                    s = server.delete_Sensor(token, s_id[j]);
+                    assertTrue(s.equals("Sensor deleted"));
+                }
+            }
+            s = server.delete_Device(token, d_id[j]);
+            assertTrue(s.equals("Device deleted"));
         }
     }
     
