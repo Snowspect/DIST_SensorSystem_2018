@@ -5,6 +5,7 @@
  */
 package SensorSystemServer;
 
+import Data.Device_DTO;
 import static Data.Measurement_DTO.createMeasurement;
 import static Data.Sensor_DTO.sensor_Pull_Sensor;
 import Data.Sensor_modi_DTO;
@@ -89,5 +90,15 @@ public class TcpImplements implements TcpInterface{
         } catch (SQLException | ClassNotFoundException ex) {
             LOGGER.log( Level.SEVERE, ex.toString(), ex );
         }
+    }
+    public int getDeviceIDFromExternalID(int external_id)
+    {
+        int device_id = 0;
+        try {
+            device_id = Device_DTO.device_getID_with_ExternalID(external_id);
+        }catch(Exception e){
+            System.out.println("getDeviceIdMethod failed somewhere along the way");
+        }
+        return device_id;
     }
 }

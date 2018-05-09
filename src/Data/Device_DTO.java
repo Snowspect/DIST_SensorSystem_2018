@@ -100,6 +100,25 @@ public class Device_DTO
         return tmp;
     }
     
+    public static int device_getID_with_ExternalID(int external_id) throws SQLException, ClassNotFoundException
+    {
+        // create a mysql database connection
+        Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+        Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
+        String query = "SELECT ID_DEVICE FROM device WHERE EXTERNAL_ID = ?";   
+        
+        PreparedStatement preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setInt(1, external_id);
+        
+        int x = 0;
+        ResultSet rs = preparedStmt.executeQuery();
+
+        while (rs.next()) {
+            x = rs.getInt("ID_DEVICE");
+        }
+        return x;
+    }
+    
     public static String[] device_Pull_All_Devices(String device_owner) throws SQLException, ClassNotFoundException
     {
         String[] x = null;

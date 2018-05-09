@@ -21,5 +21,5 @@ public interface TcpInterface {
     @WebMethod public String [] get_Sensor_Info(int sensor_id);
     @WebMethod public void sensorConf( int sensor_Type, int pin_Num, int sensor_ID);
     @WebMethod public int [] get_Device_Sensors(int device_id);
-    
+    @WebMethod public int getDeviceIDFromExternalID(int external_id);
 }
