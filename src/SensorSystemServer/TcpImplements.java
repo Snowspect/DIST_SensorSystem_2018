@@ -81,8 +81,8 @@ public class TcpImplements implements TcpInterface{
             String t = "";
             String p = pin_Num+"";
         
-            if(sensor_Type == 0) t = "0";
-            if(sensor_Type == 1) t = "1";
+            if(sensor_Type == 0) t = "DIGITAL";
+            if(sensor_Type == 1) t = "ANALOG";
         
             Sensor_modi_DTO.sensor_Change_Sensortype(t, sensor_ID);
             Sensor_modi_DTO.sensor_Change_Pin(p, sensor_ID);

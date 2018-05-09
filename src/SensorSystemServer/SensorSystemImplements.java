@@ -160,10 +160,10 @@ public class SensorSystemImplements implements SensorSystemInterface {
                     String st; 
                     switch (sensorType) {
                         case 0:
-                            st = "ANALOG";
+                            st = "DIGITAL";
                             break;
                         case 1:
-                            st = "DIGITAL";
+                            st = "ANALOG";
                             break;
                         default:
                             return null;
@@ -295,8 +295,18 @@ public class SensorSystemImplements implements SensorSystemInterface {
                     status = "Device: " + dir;
 
                     //Change sensor type
-                    String tp = type+"";
                     
+                    String tp;
+                    switch (type) {
+                        case 0:
+                            tp = "DIGITAL";
+                            break;
+                        case 1:
+                            tp = "ANALOG";
+                            break;
+                        default:
+                            return "False type";
+                    }
                     sensor_Change_Sensortype(tp, sensor_id);
                     status = status + " Sensor: " + tp;
 
