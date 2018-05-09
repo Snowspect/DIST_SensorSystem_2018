@@ -34,7 +34,7 @@ public class Sensor_modi_DTO {
             Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
             Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
             // the mysql insert statement, adding a person into person table
-            String query = "UPDATE sensor SET ID_DEVICE_REF WHERE ID_SENSOR = ?";
+            String query = "UPDATE sensor SET ID_DEVICE_REF = ? WHERE ID_SENSOR = ?";
             
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
