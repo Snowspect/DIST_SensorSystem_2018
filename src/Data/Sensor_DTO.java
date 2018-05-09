@@ -149,4 +149,21 @@ public class Sensor_DTO {
         }
         return x;
     }
+    public static String sensor_Delete_Sensor(int sensor_ID) throws SQLException, ClassNotFoundException
+    { 
+        // create a mysql database connection
+        Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+        Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
+
+        String query = "DELETE FROM sensor WHERE ID_SENSOR = ?";
+
+        PreparedStatement preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setInt(1, sensor_ID);
+
+        ResultSet rs = preparedStmt.executeQuery();
+
+        while (rs.next()) {
+        }
+        return "Sensor deleted";
+    }
 }

@@ -77,4 +77,21 @@ public class Measurement_DTO {
         }
         return tmp;
     }
+        public static String measurement_Delete_measurement(int measurement_ID) throws SQLException, ClassNotFoundException
+    { 
+        // create a mysql database connection
+        Class.forName("org.mariadb.jdbc.Driver"); //Conn is our connection file
+        Connection conn = DriverManager.getConnection(Conn.CONNECTION_STRING);
+
+        String query = "DELETE FROM measurement WHERE ID_MEASUREMENT = ?";
+
+        PreparedStatement preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setInt(1, measurement_ID);
+
+        ResultSet rs = preparedStmt.executeQuery();
+
+        while (rs.next()) {
+        }
+        return "measurement deleted";
+    }
 }
