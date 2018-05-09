@@ -27,7 +27,7 @@ public class ServerMain {
         FileHandler fh;
         
         try {
-            fh = new FileHandler("/root/log/Serverlog.log");
+            fh = new FileHandler();
             LOGGER.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);

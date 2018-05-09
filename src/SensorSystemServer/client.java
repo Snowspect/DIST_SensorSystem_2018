@@ -42,9 +42,9 @@ public class client {
         int token = 0;
         while(token == 0){
             System.out.println("Input username:");
-            owner = scanner.nextLine();
+            owner = "s164916";
             System.out.println("Input password:");
-            String password = scanner.nextLine();
+            String password = "FEDpik";
             token = server.login(owner, password); //"FEDpik"
             
             
@@ -53,7 +53,10 @@ public class client {
         while(true) 
         {
             display(server, token, owner);
-            
+            menu();
+            System.out.println("Input:");
+            int i = Integer.parseInt(scanner.nextLine());
+            options(server, token, owner, i, scanner);
         }
     }
     
@@ -75,35 +78,38 @@ public class client {
                                 int token, 
                                 String owner)
     {
-        HashMap<Integer, int[]> ids = get_ids(server, token, owner);
+  
         int[] device_IDs = server.get_Devices_ID(token, owner);
+        if(device_IDs == null) return;
         System.out.println("Device - Sensors");
         for (int i = 0; i < device_IDs.length; i++) 
         {
-            if( ids.containsKey( device_IDs[i] ) )
-            {
-                String pstm = device_IDs[i]+" : ";
-                int sensor_ids[] = ids.get(i);
+            String pstm = device_IDs[i]+" : ";
+            int sensor_ids[] = server.get_Sensors_ID(token, device_IDs[i]);
+            if(sensor_ids != null)
+            if(sensor_ids.length > 0 ){
                 for (int j = 0; j < sensor_ids.length; j++) {
                     pstm = pstm + sensor_ids[j]+ " - ";
                 }
-            System.out.println(pstm);
             }
+                
+            System.out.println(pstm);
+            
         }
     }
     
     public static void menu()
     {
         System.out.println("Choose Action \n"
-                            +"0 - Create Sensor"
-                            +"1 - Create Device"
-                            +"2 - Change Sensor"
-                            +"3 - Change Device"
-                            +"4 - Create Sensor"
-                            +"5 - Create Sensor"
-                            +"6 - Create Sensor"
-                            +"7 - Create Sensor"
-                            +"8 - Create Sensor"
+                            +"0 - Create Sensor "
+                            +"1 - Create Device "
+                            +"2 - Change Sensor "
+                            +"3 - Change Device \n"
+                            +"4 "
+                            +"5 - Show sensor info"
+                            +"6 - Show Device info"
+                            +"7 - Print Sensor Data to file."
+                            +"8 - CPrint Sensor Data to file within dates. "
                             +"9 - Create Sensor"
                             );
     }
@@ -122,7 +128,7 @@ public class client {
                 String name = scanner.nextLine();
                 System.out.println("Input device id: ");
                 int device_id = Integer.parseInt(scanner.nextLine());
-                System.out.println("Input sensorType (ANALOG or DIGITAL): ");
+                System.out.println("Input sensorType (ANALOG = 0 or DIGITAL = 1): ");
                 int type = Integer.parseInt(scanner.nextLine());
                 System.out.println("Input pin number: ");
                 int pin = Integer.parseInt(scanner.nextLine());
@@ -182,19 +188,6 @@ public class client {
             }
                 break;
             
-            case 4:
-            {
-                System.out.println("Change Device ");
-                System.out.println("Which device: ");
-                String device_id = scanner.nextLine();
-                System.out.println("Change device name: ");
-                String name = scanner.nextLine();
-                System.out.println("Change device owner: ");
-                String owner2 = scanner.nextLine();
-                String respons  = server.set_Device_Info(token,  Integer.parseInt(device_id), owner2, name);
-                
-            }
-                break;
                 
             case 5:
             {
@@ -323,6 +316,7 @@ public class client {
                                         int sensor_id)
     {
         String[] info = server.get_Sensor_Info(token, sensor_id);
+        if(info == null || info.length == 0) return;
         System.out.println("Sensor id: " + info[0]);
         System.out.println("Name: " + info[1]);
         System.out.println("Device id: " + info[2]);
