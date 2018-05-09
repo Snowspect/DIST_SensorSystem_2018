@@ -39,11 +39,12 @@ public class serverJUnitTest {
     @BeforeClass
     public static void setUpClass() {
         try {
-            //url = new URL("http://165.227.232.158:9901/SensorSystemService?wsdl");
-            url = new URL("http://localhost:9901/SensorSystemService?wsdl");
+            url = new URL("http://165.227.232.158:9901/SensorSystemService?wsdl");
+            //url = new URL("http://localhost:9901/SensorSystemService?wsdl");
             qname = new QName("http://SensorSystemServer/", "SensorSystemImplementsService");
             service = Service.create(url, qname);
             server = service.getPort(SensorSystemInterface.class);
+            token = server.login("s164916", "FEDpik");
         } catch (MalformedURLException ex) {
             Logger.getLogger(serverJUnitTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -55,12 +56,12 @@ public class serverJUnitTest {
     
     @Before
     public void setUp() {
-        token = server.login("s164916", "FEDpik");
+        
     }
     
     @After
     public void tearDown() {
-        token = 0;
+        
     }
 
     // TODO add test methods here.
@@ -74,7 +75,16 @@ public class serverJUnitTest {
     {
         assertTrue(server.validatToken(token) == token);
     }
-    
+    @Test
+    public void delete()
+    {
+        int i[] = server.get_Devices_ID(token, "s164916");
+        assertTrue(i.length != 0);
+        for (int j = 0; j < i.length; j++) {
+            System.out.println(server.delete_Device(token, i[j]));
+        }
+    }
+   
     @Test 
     public void test_Device()
     {
@@ -83,8 +93,34 @@ public class serverJUnitTest {
         ret = server.create_Device(token+1, "test_device", 42, "s164916");
         assertTrue("wrong token failed "+ret, ret == null);
         ret = server.create_Device(token, "test_device", 42, "s364916");
-        assertTrue("wrong user failed "+ret, ret == null);
+        assertTrue("wrong user failed "+ret, ret == null); 
         
+        int[] d_id = server.get_Devices_ID(token, "s164916");
+        assertTrue(d_id.length > 0);
+        
+        for (int i = 0; i < d_id.length; i++) {
+            String[] si = server.get_Device_Info(token, d_id[i]);
+            assertTrue( si.length > 0);
+            for (String string : si) {
+                System.out.println(string);
+            }
+            String di = server.set_Device_Info(token, Integer.parseInt(si[0]), si[3], si[2]);
+            assertFalse(di.isEmpty());
+            System.out.println(di);
+        }  
+    }
+    
+    @Test
+    public void test_Sensor()
+    {
+        String name = "john";        
+        String ret = server.create_Sensor(token, name, 18, 1, 3);
+        assertTrue("Sensor failed to create "+ret, Objects.equals(ret, "sensor_created"));
+        String[] si = server.get_Sensor_Info(token, 23);
+        assertTrue( si.length > 0);
+        for (String string : si) {
+            System.out.println(string);
+        }
     }
     
 }

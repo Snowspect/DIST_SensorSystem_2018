@@ -29,6 +29,6 @@ public class tcpClient {
         Service service = Service.create(url, qname);
         TcpInterface s = service.getPort(TcpInterface.class);
 
-        s.oploadData(3, 420);
+        s.oploadData(2, 3044);
     }
 }

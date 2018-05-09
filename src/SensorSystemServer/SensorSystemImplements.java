@@ -47,6 +47,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
     
     public void opdateActiveUsers(){
         Set<Integer> si = activeUsers.keySet();
+        if(activeUsers.isEmpty()) return;
         int [] id = new int[activeUsers.size()];
         for (Integer i : si) {
             id[i] = opdateToken(i);
@@ -131,7 +132,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             b.campusnetId = username;
             activeUsers.put(id_code, b);
             lastActive.put(b, new Date());
-            LOGGER.log( Level.INFO, "user login success");
+            LOGGER.log( Level.INFO, "user {0} login success",b.campusnetId);
             return id_code;
 
         } catch (Exception ex) {
@@ -181,6 +182,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             LOGGER.log( Level.SEVERE, ex.toString(), ex );
             return null;
         }
+        //LOGGER.log(Level.INFO, "token: {0} made a sensor", token);
         return ret;
     }
 
@@ -210,7 +212,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
-
+        //LOGGER.log(Level.INFO, "token: {0} made a Device", token);
         return ret;
     }
     
@@ -239,7 +241,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
-
+        //LOGGER.log(Level.INFO, "token: {0} delete a device", token);
         return ret;
     }
 
@@ -259,35 +261,37 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 if (c.equals(s))  {
                     //Change device its connected to
                     String dir = device_id_ref + "";
-                    String tmp = sensor_Change_Device_Ref(dir);
-                    status = "Owner: " + tmp;
+                    String tmp = sensor_Change_Device_Ref(dir, sensor_id);
+                    status = "Device: " + dir;
 
                     //Change sensor type
                     String tp = type+"";
                     
                     tmp = sensor_Change_Sensortype(tp, sensor_id);
-                    status = status + " Sensor: " + tmp;
+                    status = status + " Sensor: " + tp;
 
                     //Change pin
                     String pn = pin + "";
                     tmp = sensor_Change_Pin(pn, sensor_id);
-                    status = status + " Pin: " + tmp;
+                    status = status + " Pin: " + pn;
 
                     //Change name
                     tmp = sensor_Change_Name(name, sensor_id);
-                    status = status + " Name: " + tmp;
+                    status = status + " Name: " + name;
+                    LOGGER.log(Level.INFO, "Token: {0} - {1}", new Object[]{token, status});
                 } else {
                 LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, s});
                 return null;
                 }   
             } catch (SQLException | ClassNotFoundException ex) {
                 LOGGER.log( Level.SEVERE, ex.toString(), ex );
-                return null;
+                return "SQL failed";
             }   
         } else {
             LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
+        //LOGGER.log(Level.INFO, "Token: {0} changed a sensor", token);
         return status;
     }
 
@@ -304,9 +308,11 @@ public class SensorSystemImplements implements SensorSystemInterface {
                 String c = activeUsers.get(token).campusnetId;
                 if (c.equals(s)) {
                     String tmp = device_Change_Owner(owner, device_id);
-                    status = "Owner: " + tmp;
+                    status = "Owner: " + owner;
                     tmp = device_Change_Name(name, device_id);
-                    status = status + " Name: " + tmp;               
+                    status = status + " Name: " + name;
+                    
+                    LOGGER.log(Level.INFO, "Token: {0} - {1}", new Object[]{token, status});
                 } else {
                     LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, owner});
                     return null;
@@ -319,6 +325,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
+        //LOGGER.log(Level.INFO, "Token: {0} changed a device", token);
         return status;
     }
 
@@ -348,6 +355,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
+        //LOGGER.log(Level.INFO, "Token: {0} got sensor info", token);
         return ret;
     }
 
@@ -359,6 +367,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
         if (activeUsers.containsKey(token)) {
             try {
                 List<String> lt = device_Pull_Device(device_id);
+                if(lt.isEmpty() || lt == null) return null;
                 String c = activeUsers.get(token).campusnetId;
                 if (!(lt.get(3).equals( c ))) {
                     LOGGER.log(Level.INFO, "{0} != {1}", new Object[]{c, lt.get(3)});
@@ -376,6 +385,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
+        //LOGGER.log(Level.INFO, "Token: {0} got device info", token);
         return ret;
     }
     
@@ -407,6 +417,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
         LOGGER.log(Level.INFO, "Token: {0} not in use", token);
         return null;
     }
+    //LOGGER.log(Level.INFO, "Token: {0} got device ids", token);
     return ret;
 }
 
@@ -440,6 +451,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
+        //LOGGER.log(Level.INFO, "Token: {0} got sensor ids", token);
         return ret;
     }
     
@@ -465,6 +477,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
+        //LOGGER.log(Level.INFO, "Token: {0} got sensor all info", token);
         return ret;
     }
 
@@ -503,6 +516,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
+        //LOGGER.log(Level.INFO, "Token: {0} got all ids", token);
         return ret;
     }
 
@@ -534,6 +548,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
+        //LOGGER.log(Level.INFO, "Token: {0} got sensor data", token);
         return ret;
     }
 
@@ -568,6 +583,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
+        //LOGGER.log(Level.INFO, "Token: {0} got sensor data within dates", token);
         return ret;
     }
 
@@ -600,6 +616,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
+        //LOGGER.log(Level.INFO, "Token: {0} got measurement data", token);
         return ret;
     }
 
@@ -634,6 +651,7 @@ public class SensorSystemImplements implements SensorSystemInterface {
             LOGGER.log(Level.INFO, "Token: {0} not in use", token);
             return null;
         }
+        //LOGGER.log(Level.INFO, "Token: {0} got measurement data within dates", token);
         return ret;
     }
 }
