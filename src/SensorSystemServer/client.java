@@ -40,18 +40,25 @@ public class client {
         String owner = "";
         int token = 0;
         while(token == 0){
+            System.out.println("Login på javabogen.dk");
             System.out.println("Input username:");
             owner = scanner.nextLine();
             System.out.println("Input password:");
             String password = scanner.nextLine();
-            token = server.login(owner, password); //"FEDpik"
-            
-            
+            token = server.login(owner, password);   
         }
         HashMap<Integer, int[]> ids = new HashMap<>();
         while(true) 
         {
             display(server, token, owner);
+            while(server.validatToken(token) == 0){
+                System.out.println("Login på javabogen.dk");
+                System.out.println("Input username:");
+                owner = scanner.nextLine();
+                System.out.println("Input password:");
+                String password = scanner.nextLine();
+                token = server.login(owner, password); 
+            }
             menu();
             System.out.println("Input:");
             int i = Integer.parseInt(scanner.nextLine());
@@ -81,37 +88,41 @@ public class client {
   
         int[] device_IDs = server.get_Devices_ID(token, owner);
         if(device_IDs == null) return;
-        System.out.println("Device - Sensors");
+        System.out.print(
+                "//////////////////////////////////////////////////////////////////\n"
+                +"\t Device - Sensors \n");
         for (int i = 0; i < device_IDs.length; i++) 
         {
-            String pstm = device_IDs[i]+" : ";
+            String pstm = "\t"+device_IDs[i]+" : ";
             int sensor_ids[] = server.get_Sensors_ID(token, device_IDs[i]);
             if(sensor_ids != null)
             if(sensor_ids.length > 0 ){
                 for (int j = 0; j < sensor_ids.length; j++) {
-                    pstm = pstm + sensor_ids[j]+ " - ";
+                    pstm = pstm + sensor_ids[j]+ " ";
                 }
             }
-                
-            System.out.println(pstm);
+            pstm = pstm + "\n";    
+            System.out.print(pstm);
             
         }
     }
     
     public static void menu()
     {
-        System.out.println("Choose Action \n"
-                            +"0 \t exit \n"
-                            +"1 \t Create Sensor \n"    
-                            +"2 \t Create Device \n"    
-                            +"3 \t Change Sensor \n"    
-                            +"4 \t Change Device \n"
-                            +"5 \t Delete Sensor \n"
-                            +"6 \t Delete Device \n"
-                            +"7 \t Sensor Info \n"
-                            +"8 \t Device Info \n"
-                            +"9 \t Print Sensor Data to file.\n" 
-                            +"10 \t Print Sensor Data to file within dates. \n"
+        System.out.print( "//////////////////////////////////////////////////////////////////\n"
+                            +"\t Choose Action \t\t\t\t\t\t\n"
+                            +"\t 0 \t exit \t\t\t\t\t\t\n"
+                            +"\t 1 \t Create Sensor \t\t\t\t\t\n"    
+                            +"\t 2 \t Create Device \t\t\t\t\t\n"    
+                            +"\t 3 \t Change Sensor \t\t\t\t\t\n"    
+                            +"\t 4 \t Change Device \t\t\t\t\t\n"
+                            +"\t 5 \t Delete Sensor \t\t\t\t\t\n"
+                            +"\t 6 \t Delete Device \t\t\t\t\t\n"
+                            +"\t 7 \t Sensor Info \t\t\t\t\t\n"
+                            +"\t 8 \t Device Info \t\t\t\t\t\n"
+                            +"\t 9 \t Print Sensor Data to file.\t\t\t\n" 
+                            +"\t 10 \t Print Sensor Data to file within dates. \t\n"
+                            +"//////////////////////////////////////////////////////////////////\n"
                               
         );
     }
